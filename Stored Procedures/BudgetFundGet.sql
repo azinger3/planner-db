@@ -1,3 +1,6 @@
+DROP PROCEDURE IF EXISTS `BudgetFundGet`;
+
+DELIMITER ;;
 CREATE PROCEDURE `BudgetFundGet`()
 BEGIN
 	SELECT		FundID
@@ -13,4 +16,4 @@ BEGIN
 	FROM		Fund Fund
     ORDER BY	Fund.FundName
     ;
-END
+END ;;
