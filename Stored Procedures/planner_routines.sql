@@ -30,7 +30,7 @@ USE `planner`;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` FUNCTION `DateMask`(SourceDT DATETIME) RETURNS varchar(10) CHARSET latin1
+CREATE FUNCTION `DateMask`(SourceDT DATETIME) RETURNS varchar(10) CHARSET latin1
 BEGIN
 	DECLARE MaskDT VARCHAR(10);
     
@@ -53,7 +53,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` FUNCTION `MonthNumberGet`(BudgetMonth DATETIME) RETURNS int(11)
+CREATE FUNCTION `MonthNumberGet`(BudgetMonth DATETIME) RETURNS int(11)
 BEGIN
 	DECLARE MonthNumber INT(2);
     
@@ -80,7 +80,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `ApplicationLogInsert`(
+CREATE PROCEDURE `ApplicationLogInsert`(
 	ApplicationID				INT
 	,RemoteAddress				VARCHAR(100)
 	,RemoteHost					VARCHAR(100)
@@ -218,7 +218,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetAverageGet`(StartDT DATETIME, EndDT DATETIME)
+CREATE PROCEDURE `BudgetAverageGet`(StartDT DATETIME, EndDT DATETIME)
 BEGIN
 	DECLARE SessionID VARCHAR(100);
 	DECLARE TimeSpanMonth INT;
@@ -433,7 +433,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetBreakdownGet`(StartDT DATETIME, EndDT DATETIME)
+CREATE PROCEDURE `BudgetBreakdownGet`(StartDT DATETIME, EndDT DATETIME)
 BEGIN
 	DECLARE SessionID VARCHAR(100);
     
@@ -536,7 +536,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetByMonthDelete`(BudgetNumber INT)
+CREATE PROCEDURE `BudgetByMonthDelete`(BudgetNumber INT)
 BEGIN
 	DELETE FROM	Budget 
     WHERE		Budget.BudgetNumber = BudgetNumber
@@ -565,7 +565,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetByMonthInsert`(BudgetMonth DATETIME)
+CREATE PROCEDURE `BudgetByMonthInsert`(BudgetMonth DATETIME)
 BEGIN
 	DECLARE BudgetNumberPrevious INT;
     DECLARE BudgetIDNew INT;
@@ -670,7 +670,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetByMonthValidate`(BudgetMonth DATETIME)
+CREATE PROCEDURE `BudgetByMonthValidate`(BudgetMonth DATETIME)
 BEGIN
 	DECLARE BudgetNumber INT(10);
     DECLARE HasBudgetFlg INT(1);
@@ -697,7 +697,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetCategoryByKeywordGet`(Keyword VARCHAR(100))
+CREATE PROCEDURE `BudgetCategoryByKeywordGet`(Keyword VARCHAR(100))
 BEGIN
 	SELECT		BudgetGroup.BudgetGroupID
 				,BudgetGroup.BudgetGroup
@@ -740,7 +740,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetCategoryGet`()
+CREATE PROCEDURE `BudgetCategoryGet`()
 BEGIN
 	SELECT		BudgetGroup.BudgetGroupID
 				,BudgetGroup.BudgetGroup
@@ -770,7 +770,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetCategoryInsert`(IN BudgetGroupID INT, IN FundID INT, BudgetCategory VARCHAR(100), IN Description VARCHAR(1000), IN Note VARCHAR(1000), IN IsEssential INT, IN HasSpotlight INT, OUT BudgetCategoryID INT)
+CREATE PROCEDURE `BudgetCategoryInsert`(IN BudgetGroupID INT, IN FundID INT, BudgetCategory VARCHAR(100), IN Description VARCHAR(1000), IN Note VARCHAR(1000), IN IsEssential INT, IN HasSpotlight INT, OUT BudgetCategoryID INT)
 BEGIN
 	INSERT INTO	BudgetCategory
     (
@@ -813,7 +813,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetCategorySpotlightGet`()
+CREATE PROCEDURE `BudgetCategorySpotlightGet`()
 BEGIN
 	DECLARE SessionID VARCHAR(100);
 	DECLARE StartDT DATETIME;
@@ -1036,7 +1036,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetCategoryUpdate`(IN BudgetCategoryID INT, IN BudgetGroupID INT, IN FundID INT, BudgetCategory VARCHAR(100), IN Description VARCHAR(1000), IN Note VARCHAR(1000), IN IsEssential INT, IN HasSpotlight INT)
+CREATE PROCEDURE `BudgetCategoryUpdate`(IN BudgetCategoryID INT, IN BudgetGroupID INT, IN FundID INT, BudgetCategory VARCHAR(100), IN Description VARCHAR(1000), IN Note VARCHAR(1000), IN IsEssential INT, IN HasSpotlight INT)
 BEGIN
 	UPDATE 	BudgetCategory
 	SET		BudgetCategory.BudgetGroupID 	= BudgetGroupID
@@ -1066,7 +1066,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetExpenseByMonthGet`(BudgetMonth DATETIME)
+CREATE PROCEDURE `BudgetExpenseByMonthGet`(BudgetMonth DATETIME)
 BEGIN    
 
 	DECLARE BudgetNumber	INT(10);
@@ -1403,7 +1403,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetExpenseDelete`(BudgetItemID INT)
+CREATE PROCEDURE `BudgetExpenseDelete`(BudgetItemID INT)
 BEGIN
 	DELETE FROM	BudgetItem
     WHERE		BudgetItem.BudgetItemID = BudgetItemID
@@ -1424,7 +1424,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetExpenseDetailGet`(BudgetItemID INT)
+CREATE PROCEDURE `BudgetExpenseDetailGet`(BudgetItemID INT)
 BEGIN
 	SELECT		BudgetItem.BudgetItemID
 				,BudgetItem.BudgetNumber
@@ -1466,7 +1466,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetExpenseUpdate`(BudgetItemID INT, BudgetNumber INT, Amount DECIMAL(10, 4), BudgetGroupID INT, BudgetGroup VARCHAR(100), BudgetCategoryID INT, BudgetCategory VARCHAR(100), Description VARCHAR(1000), Note VARCHAR(1000), IsEssential INT, HasSpotlight INT, HasFundFlg INT, FundID INT, FundName VARCHAR(100), StartingBalance DECIMAL(10, 4))
+CREATE PROCEDURE `BudgetExpenseUpdate`(BudgetItemID INT, BudgetNumber INT, Amount DECIMAL(10, 4), BudgetGroupID INT, BudgetGroup VARCHAR(100), BudgetCategoryID INT, BudgetCategory VARCHAR(100), Description VARCHAR(1000), Note VARCHAR(1000), IsEssential INT, HasSpotlight INT, HasFundFlg INT, FundID INT, FundName VARCHAR(100), StartingBalance DECIMAL(10, 4))
 BEGIN 
 	IF BudgetGroupID > 0 THEN
         CALL BudgetGroupUpdate(BudgetGroupID, BudgetGroup);
@@ -1521,7 +1521,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetFundByKeywordGet`(Keyword VARCHAR(100))
+CREATE PROCEDURE `BudgetFundByKeywordGet`(Keyword VARCHAR(100))
 BEGIN
 	SELECT		FundID
 				,FundName
@@ -1553,7 +1553,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetFundGet`()
+CREATE PROCEDURE `BudgetFundGet`()
 BEGIN
 	SELECT		FundID
 				,FundName
@@ -1584,7 +1584,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetFundInsert`(IN FundName VARCHAR(100), IN StartingBalance DECIMAL(10, 4), OUT FundID INT)
+CREATE PROCEDURE `BudgetFundInsert`(IN FundName VARCHAR(100), IN StartingBalance DECIMAL(10, 4), OUT FundID INT)
 BEGIN
 	INSERT INTO Fund
     (
@@ -1619,7 +1619,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetFundSpotlightGet`()
+CREATE PROCEDURE `BudgetFundSpotlightGet`()
 BEGIN
 	DECLARE SessionID VARCHAR(100);
 
@@ -1736,7 +1736,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetFundSummaryGet`(FundID INT)
+CREATE PROCEDURE `BudgetFundSummaryGet`(FundID INT)
 BEGIN
 	DECLARE SessionID VARCHAR(100);
 
@@ -1874,7 +1874,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetFundUpdate`(IN FundName VARCHAR(100), IN StartingBalance DECIMAL(10, 4), IN FundID INT)
+CREATE PROCEDURE `BudgetFundUpdate`(IN FundName VARCHAR(100), IN StartingBalance DECIMAL(10, 4), IN FundID INT)
 BEGIN
 	UPDATE 	Fund
     SET		Fund.FundName = FundName
@@ -1899,7 +1899,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetGet`()
+CREATE PROCEDURE `BudgetGet`()
 BEGIN
 	SELECT 		Budget.BudgetID
 				,Budget.BudgetNumber
@@ -1931,7 +1931,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetGroupByKeywordGet`(Keyword VARCHAR(100))
+CREATE PROCEDURE `BudgetGroupByKeywordGet`(Keyword VARCHAR(100))
 BEGIN
 	SELECT		BudgetGroupID
 				,BudgetGroup
@@ -1959,7 +1959,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetGroupGet`()
+CREATE PROCEDURE `BudgetGroupGet`()
 BEGIN
 	SELECT		BudgetGroupID
 				,BudgetGroup
@@ -1986,7 +1986,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetGroupInsert`(IN BudgetGroup VARCHAR(100), OUT BudgetGroupID INT)
+CREATE PROCEDURE `BudgetGroupInsert`(IN BudgetGroup VARCHAR(100), OUT BudgetGroupID INT)
 BEGIN
 	INSERT INTO BudgetGroup
 	(
@@ -2017,7 +2017,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetGroupUpdate`(BudgetGroupID INT, BudgetGroup VARCHAR(100))
+CREATE PROCEDURE `BudgetGroupUpdate`(BudgetGroupID INT, BudgetGroup VARCHAR(100))
 BEGIN
 	UPDATE	BudgetGroup
     SET		BudgetGroup.BudgetGroup 	= BudgetGroup
@@ -2041,7 +2041,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetIncomeByMonthGet`(BudgetMonth DATETIME)
+CREATE PROCEDURE `BudgetIncomeByMonthGet`(BudgetMonth DATETIME)
 BEGIN
     DECLARE BudgetNumber	INT(10);
 
@@ -2253,7 +2253,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetIncomeCalculate`(BudgetNumber INT)
+CREATE PROCEDURE `BudgetIncomeCalculate`(BudgetNumber INT)
 BEGIN
 	UPDATE	BudgetItem
 	SET		Amount = 	(
@@ -2280,7 +2280,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetIncomeDelete`(BudgetIncomeID INT)
+CREATE PROCEDURE `BudgetIncomeDelete`(BudgetIncomeID INT)
 BEGIN
 	DECLARE BudgetNumber INT(10);
     
@@ -2309,7 +2309,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetIncomeDetailGet`(BudgetIncomeID INT)
+CREATE PROCEDURE `BudgetIncomeDetailGet`(BudgetIncomeID INT)
 BEGIN
 	SELECT	BudgetIncome.BudgetIncomeID
 			,BudgetIncome.BudgetNumber
@@ -2352,7 +2352,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetIncomeInsert`(BudgetNumber INT, IncomeName VARCHAR(100), IncomeTypeID INT, IncomeType VARCHAR(100), PayCycleID INT, PayCycle VARCHAR(100), TakeHomePay DECIMAL(10, 4), HourlyRate DECIMAL(10, 4), PlannedHours INT, Salary DECIMAL(10, 4), YearDeduct DECIMAL(10, 4))
+CREATE PROCEDURE `BudgetIncomeInsert`(BudgetNumber INT, IncomeName VARCHAR(100), IncomeTypeID INT, IncomeType VARCHAR(100), PayCycleID INT, PayCycle VARCHAR(100), TakeHomePay DECIMAL(10, 4), HourlyRate DECIMAL(10, 4), PlannedHours INT, Salary DECIMAL(10, 4), YearDeduct DECIMAL(10, 4))
 BEGIN
 	INSERT INTO BudgetIncome
 	(
@@ -2403,7 +2403,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetIncomeUpdate`(BudgetIncomeID INT, BudgetNumber INT, IncomeName VARCHAR(100), IncomeTypeID INT, IncomeType VARCHAR(100), PayCycleID INT, PayCycle VARCHAR(100), TakeHomePay DECIMAL(10, 4), HourlyRate DECIMAL(10, 4), PlannedHours INT, Salary DECIMAL(10, 4), YearDeduct DECIMAL(10, 4))
+CREATE PROCEDURE `BudgetIncomeUpdate`(BudgetIncomeID INT, BudgetNumber INT, IncomeName VARCHAR(100), IncomeTypeID INT, IncomeType VARCHAR(100), PayCycleID INT, PayCycle VARCHAR(100), TakeHomePay DECIMAL(10, 4), HourlyRate DECIMAL(10, 4), PlannedHours INT, Salary DECIMAL(10, 4), YearDeduct DECIMAL(10, 4))
 BEGIN
 	UPDATE 	BudgetIncome
 	SET		BudgetIncome.BudgetNumber 	= BudgetNumber
@@ -2440,7 +2440,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetInsert`(BudgetMonth DATETIME)
+CREATE PROCEDURE `BudgetInsert`(BudgetMonth DATETIME)
 BEGIN
 	DECLARE BudgetIDPrevious INT;
     DECLARE BudgetIDNew INT;
@@ -2507,7 +2507,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetItemDelete`(BudgetItemID INT)
+CREATE PROCEDURE `BudgetItemDelete`(BudgetItemID INT)
 BEGIN
 	DELETE FROM	BudgetItem
     WHERE		BudgetItem.BudgetItemID = BudgetItemID
@@ -2528,7 +2528,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetItemInsert`(BudgetNumber INT, BudgetCategoryID INT, BudgetTypeID INT, Amount DECIMAL(10, 4))
+CREATE PROCEDURE `BudgetItemInsert`(BudgetNumber INT, BudgetCategoryID INT, BudgetTypeID INT, Amount DECIMAL(10, 4))
 BEGIN
 	INSERT INTO BudgetItem
     (
@@ -2562,7 +2562,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetItemUpdate`(BudgetItemID INT, BudgetNumber INT, BudgetCategoryID INT, BudgetTypeID INT, Amount DECIMAL(10, 4))
+CREATE PROCEDURE `BudgetItemUpdate`(BudgetItemID INT, BudgetNumber INT, BudgetCategoryID INT, BudgetTypeID INT, Amount DECIMAL(10, 4))
 BEGIN
 	UPDATE	BudgetItem
 	SET		BudgetItem.BudgetNumber			= BudgetNumber
@@ -2589,7 +2589,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetSummaryGet`(BudgetMonth DATETIME)
+CREATE PROCEDURE `BudgetSummaryGet`(BudgetMonth DATETIME)
 BEGIN
 
     DECLARE SessionID VARCHAR(100);
@@ -2911,7 +2911,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetSummarySpotlightGet`()
+CREATE PROCEDURE `BudgetSummarySpotlightGet`()
 BEGIN
 	SELECT 		Budget.BudgetID
 				,Budget.BudgetNumber
@@ -2944,7 +2944,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `BudgetYearGet`()
+CREATE PROCEDURE `BudgetYearGet`()
 BEGIN
 	DECLARE MaxDT DATETIME;
 	DECLARE StartDT DATETIME;
@@ -3019,7 +3019,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `TransactionDelete`(TransactionID INT)
+CREATE PROCEDURE `TransactionDelete`(TransactionID INT)
 BEGIN
 	DELETE FROM Transaction
     WHERE Transaction.TransactionID = TransactionID
@@ -3040,7 +3040,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `TransactionDescriptionGet`(Keyword VARCHAR(100))
+CREATE PROCEDURE `TransactionDescriptionGet`(Keyword VARCHAR(100))
 BEGIN
 	SET @Description = '';			
 	SET @TransactionDT = '';
@@ -3116,7 +3116,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `TransactionInsert`(TransactionTypeID INT, TransactionNumber VARCHAR(100), TransactionDT DATETIME, BudgetCategoryID INT, Amount DECIMAL(10 ,4), Description VARCHAR(1000), Note VARCHAR(1000))
+CREATE PROCEDURE `TransactionInsert`(TransactionTypeID INT, TransactionNumber VARCHAR(100), TransactionDT DATETIME, BudgetCategoryID INT, Amount DECIMAL(10 ,4), Description VARCHAR(1000), Note VARCHAR(1000))
 BEGIN
 	DECLARE BudgetNumber INT(10);
     DECLARE FundID INT(1);
@@ -3228,7 +3228,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `TransactionRecentGet`()
+CREATE PROCEDURE `TransactionRecentGet`()
 BEGIN
 	SELECT		Transaction.TransactionID					AS TransactionID
 				,Transaction.TransactionTypeID				AS TransactionTypeID
@@ -3284,7 +3284,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=`azinger3`@`%` PROCEDURE `TransactionUpdate`(TransactionID INT, TransactionNumber VARCHAR(100), TransactionDT DATETIME, BudgetID INT, BudgetCategoryID INT, Amount DECIMAL(10 ,4), Description VARCHAR(1000), Note VARCHAR(1000))
+CREATE PROCEDURE `TransactionUpdate`(TransactionID INT, TransactionNumber VARCHAR(100), TransactionDT DATETIME, BudgetID INT, BudgetCategoryID INT, Amount DECIMAL(10 ,4), Description VARCHAR(1000), Note VARCHAR(1000))
 BEGIN
 	UPDATE	Transaction
     SET		Transaction.TransactionDT 		= TransactionDT

@@ -1,0 +1,8 @@
+CREATE FUNCTION `DateMask`(SourceDT DATETIME) RETURNS varchar(10) CHARSET latin1
+BEGIN
+	DECLARE MaskDT VARCHAR(10);
+    
+    SET MaskDT = DATE_FORMAT(SourceDT,'%m/%d/%YY');
+    
+RETURN MaskDT;
+END
