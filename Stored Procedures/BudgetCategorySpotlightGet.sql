@@ -1,13 +1,15 @@
 CREATE PROCEDURE `BudgetCategorySpotlightGet`()
 BEGIN
 	DECLARE SessionID VARCHAR(100);
+    DECLARE NowDT DATETIME;
 	DECLARE StartDT DATETIME;
 	DECLARE EndDT DATETIME;
     DECLARE BudgetNumber INT(10);
-
+	
 	SET SessionID = UUID();
-	SET StartDT = CAST(DATE_FORMAT(NOW() ,'%Y-%m-01') AS DATE);
-	SET EndDT = LAST_DAY(NOW());
+    SET NowDT = CONVERT_TZ(NOW(), '+00:00','-05:00');
+	SET StartDT = CAST(DATE_FORMAT(NowDT ,'%Y-%m-01') AS DATE);
+	SET EndDT = LAST_DAY(NowDT);
     SET BudgetNumber = EXTRACT(YEAR_MONTH FROM StartDT);
 
 	INSERT INTO tmpBudgetCategorySpotlight
@@ -180,7 +182,7 @@ BEGIN
     
 	SELECT		KeyID										AS KeyID
 				,SessionID									AS SessionID
-				,DATE_FORMAT(NOW(),'%M %e, %Y')				AS BudgetMonth
+				,DATE_FORMAT(NowDT,'%M %e, %Y')				AS BudgetMonth
 				,tmpBudgetCategorySpotlight.BudgetNumber	AS BudgetNumber
 				,BudgetCategoryID							AS BudgetCategoryID
 				,BudgetCategory								AS BudgetCategory

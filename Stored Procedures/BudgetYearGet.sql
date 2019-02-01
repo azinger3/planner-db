@@ -6,7 +6,7 @@ BEGIN
 	DECLARE i INT; 
     DECLARE counter INT;
     
-	SET MaxDT = NOW();
+	SET MaxDT = CONVERT_TZ(NOW(), '+00:00','-05:00');
 	SET StartDT = '2016-04-01';
 	SET EndDT = DATE_ADD(StartDT, INTERVAL 12 MONTH);
 	SET i = 1; 
