@@ -6,14 +6,16 @@ BEGIN
     DECLARE MonthInterval	INT(10);
     DECLARE StartDT			DATETIME;
     DECLARE EndDT			DATETIME;
+    DECLARE NowDT			DATETIME;
 
+	SET NowDT = CONVERT_TZ(NOW(), '+00:00','-05:00');
 	SET BudgetNumber = EXTRACT(YEAR_MONTH FROM BudgetMonth);
     
-	SET MonthNumber = MonthNumberGet(NOW());
+	SET MonthNumber = MonthNumberGet(NowDT);
 	SET MonthInterval = (MonthNumber * -1) + 1;
     
-	SET StartDT = DATE_ADD(CAST(DATE_FORMAT(NOW() ,'%Y-%m-01') AS DATE), INTERVAL MonthInterval MONTH);
-	SET EndDT = LAST_DAY(NOW());
+	SET StartDT = DATE_ADD(CAST(DATE_FORMAT(NowDT ,'%Y-%m-01') AS DATE), INTERVAL MonthInterval MONTH);
+	SET EndDT = LAST_DAY(NowDT);
 
 
     DROP TEMPORARY TABLE IF EXISTS tmpBudget;
