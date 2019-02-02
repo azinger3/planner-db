@@ -1,3 +1,8 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetAverageGet`;
+
+DELIMITER ;;
 CREATE PROCEDURE `BudgetAverageGet`(StartDT DATETIME, EndDT DATETIME)
 BEGIN
 	DECLARE SessionID VARCHAR(100);
@@ -197,4 +202,5 @@ BEGIN
 
 	DELETE FROM	tmpBudgetAverage 
     WHERE		tmpBudgetAverage.SessionID = SessionID;
-END
+END;;
+DELIMITER ;
