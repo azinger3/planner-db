@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetCategoryByKeywordGet`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetCategoryByKeywordGet`(Keyword VARCHAR(100))
 BEGIN
 	SELECT		BudgetGroup.BudgetGroupID
@@ -25,4 +31,5 @@ BEGIN
     ;
     
 
-END
+END;;
+DELIMITER ;

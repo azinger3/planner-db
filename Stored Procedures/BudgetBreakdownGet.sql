@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetBreakdownGet`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetBreakdownGet`(StartDT DATETIME, EndDT DATETIME)
 BEGIN
 	DECLARE SessionID VARCHAR(100);
@@ -85,4 +91,5 @@ BEGIN
 	DELETE FROM	tmpBudgetBreakdown 
     WHERE		tmpBudgetBreakdown.SessionID = SessionID
     ;
-END
+END;;
+DELIMITER ;

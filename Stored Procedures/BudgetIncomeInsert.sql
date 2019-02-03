@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetIncomeInsert`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetIncomeInsert`(BudgetNumber INT, IncomeName VARCHAR(100), IncomeTypeID INT, IncomeType VARCHAR(100), PayCycleID INT, PayCycle VARCHAR(100), TakeHomePay DECIMAL(10, 4), HourlyRate DECIMAL(10, 4), PlannedHours INT, Salary DECIMAL(10, 4), YearDeduct DECIMAL(10, 4))
 BEGIN
 	INSERT INTO BudgetIncome
@@ -33,4 +39,5 @@ BEGIN
     
     
     CALL BudgetIncomeCalculate(BudgetNumber);
-END
+END;;
+DELIMITER ;

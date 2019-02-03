@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetIncomeDelete`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetIncomeDelete`(BudgetIncomeID INT)
 BEGIN
 	DECLARE BudgetNumber INT(10);
@@ -11,4 +17,5 @@ BEGIN
         
     
     CALL BudgetIncomeCalculate(BudgetNumber);
-END
+END;;
+DELIMITER ;

@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetIncomeDetailGet`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetIncomeDetailGet`(BudgetIncomeID INT)
 BEGIN
 	SELECT	BudgetIncome.BudgetIncomeID
@@ -25,4 +31,5 @@ BEGIN
 	FROM 	BudgetIncome BudgetIncome
     WHERE	BudgetIncome.BudgetIncomeID = BudgetIncomeID
     ;
-END
+END;;
+DELIMITER ;

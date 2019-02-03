@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `ApplicationLogInsert`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `ApplicationLogInsert`(
 	ApplicationID				INT
 	,RemoteAddress				VARCHAR(100)
@@ -120,4 +126,5 @@ BEGIN
 			,CONVERT_TZ(NOW(),'+00:00','+03:00') 	AS CreateDT
 			,'System' 								AS CreateBy
             ;
-END
+END;;
+DELIMITER ;

@@ -1,3 +1,10 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetFundSpotlightGet`;
+
+DELIMITER ;;
+
+
 CREATE PROCEDURE `BudgetFundSpotlightGet`()
 BEGIN
 	DECLARE SessionID VARCHAR(100);
@@ -99,4 +106,5 @@ BEGIN
 	DELETE FROM	tmpBudgetFundSpotlight 
 	WHERE		tmpBudgetFundSpotlight.SessionID = SessionID
     ;
-END
+END;;
+DELIMITER ;

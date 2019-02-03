@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetIncomeByMonthGet`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetIncomeByMonthGet`(BudgetMonth DATETIME)
 BEGIN
     DECLARE BudgetNumber	INT(10);
@@ -194,4 +200,5 @@ BEGIN
 	ORDER BY 	tmpBudgetIncome.Sort
 				,tmpBudgetIncome.IncomeMonthly
 	;
-END
+END;;
+DELIMITER ;

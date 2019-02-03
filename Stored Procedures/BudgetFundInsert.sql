@@ -1,3 +1,10 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetFundInsert`;
+
+DELIMITER ;;
+
+
 CREATE PROCEDURE `BudgetFundInsert`(IN FundName VARCHAR(100), IN StartingBalance DECIMAL(10, 4), OUT FundID INT)
 BEGIN
 	INSERT INTO Fund
@@ -17,4 +24,5 @@ BEGIN
     
     
     SET FundID = LAST_INSERT_ID();
-END
+END;;
+DELIMITER ;

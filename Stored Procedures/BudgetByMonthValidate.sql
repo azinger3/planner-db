@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetByMonthValidate`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetByMonthValidate`(BudgetMonth DATETIME)
 BEGIN
 	DECLARE BudgetNumber INT(10);
@@ -9,4 +15,5 @@ BEGIN
 	SET	HasBudgetFlg = (SELECT COUNT(Budget.BudgetID) FROM Budget Budget WHERE Budget.BudgetNumber = BudgetNumber);
 
 	SELECT HasBudgetFlg AS HasBudgetFlg;
-END
+END;;
+DELIMITER ;

@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `TransactionInsert`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `TransactionInsert`(TransactionTypeID INT, TransactionNumber VARCHAR(100), TransactionDT DATETIME, BudgetCategoryID INT, Amount DECIMAL(10 ,4), Description VARCHAR(1000), Note VARCHAR(1000))
 BEGIN
 	DECLARE BudgetNumber INT(10);
@@ -94,4 +100,5 @@ BEGIN
 	AND 	FundID IS NOT NULL
 	AND		IsNegativeFlg = 1
     ;
-END
+END;;
+DELIMITER ;

@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetByMonthDelete`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetByMonthDelete`(BudgetNumber INT)
 BEGIN
 	DELETE FROM	Budget 
@@ -11,4 +17,5 @@ BEGIN
     DELETE FROM	BudgetIncome
     WHERE		BudgetIncome.BudgetNumber = BudgetNumber
     ;
-END
+END;;
+DELIMITER ;

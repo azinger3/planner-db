@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetGroupUpdate`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetGroupUpdate`(BudgetGroupID INT, BudgetGroup VARCHAR(100))
 BEGIN
 	UPDATE	BudgetGroup
@@ -6,4 +12,5 @@ BEGIN
             ,BudgetGroup.ModifyBy		= 'User'
 	WHERE	BudgetGroup.BudgetGroupID = BudgetGroupID
     ;
-END
+END;;
+DELIMITER ;

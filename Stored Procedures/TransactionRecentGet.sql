@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `TransactionRecentGet`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `TransactionRecentGet`()
 BEGIN
 	SELECT		Transaction.TransactionID					AS TransactionID
@@ -38,4 +44,5 @@ BEGIN
                 ,Transaction.TransactionID DESC
 				,Transaction.Description ASC
 	;
-END
+END;;
+DELIMITER ;

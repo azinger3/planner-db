@@ -1,3 +1,10 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetYearGet`;
+
+DELIMITER ;;
+
+
 CREATE PROCEDURE `BudgetYearGet`()
 BEGIN
 	DECLARE MaxDT DATETIME;
@@ -57,4 +64,5 @@ BEGIN
     FROM 		tmpBudgetYear tmpBudgetYear
     ORDER BY	tmpBudgetYear.YearName DESC
     ;
-END
+END;;
+DELIMITER ;

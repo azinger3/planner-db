@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetFundSummaryGet`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetFundSummaryGet`(FundID INT)
 BEGIN
 	DECLARE SessionID VARCHAR(100);
@@ -120,4 +126,5 @@ BEGIN
 	DELETE FROM	tmpBudgetFundSummary 
 	WHERE		tmpBudgetFundSummary.SessionID = SessionID
 	;
-END
+END;;
+DELIMITER ;

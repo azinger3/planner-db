@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetExpenseByMonthGet`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetExpenseByMonthGet`(BudgetMonth DATETIME)
 BEGIN    
 
@@ -62,7 +68,7 @@ BEGIN
 		,BalanceYearly          	DECIMAL(10, 0)
         ,TransactionActual			DECIMAL(10, 2)
 		,TransactionAverage			DECIMAL(10, 2)
-        ,RANK						INT(10)
+        ,RankID							INT(10)
         ,IsBalanceMonthlyNegative	INT(1)
 		,PRIMARY KEY (`KeyID`)
 	);
@@ -210,20 +216,20 @@ BEGIN
     ;
     
     
-    
+
     SET @i = 0;
     UPDATE		tmpBudget
     INNER JOIN	(	
 					SELECT  RSRank.Amount
 							,RSRank.BudgetItemID
 							,RSRank.BudgetCategory
-							,RSRank.RANK
+							,RSRank.RankID
 					FROM
 					(
 						SELECT  RSBudgetItem.Amount
 								,RSBudgetItem.BudgetItemID
 								,RSBudgetItem.BudgetCategory
-								,@i :=  @i + 1 AS RANK
+								,@i :=  @i + 1 AS RankID
 						FROM
 						(
 							SELECT  	BudgetItem.Amount
@@ -240,8 +246,9 @@ BEGIN
 					) RSRank
 				) RS
     ON			tmpBudget.BudgetItemID = RS.BudgetItemID
-    SET			tmpBudget.RANK = RS.RANK
+    SET			tmpBudget.RankID = RS.RankID
 	;
+
     
     
     
@@ -314,11 +321,12 @@ BEGIN
 				,tmpBudget.BalanceYearly
                 ,tmpBudget.TransactionActual
                 ,IFNULL(tmpBudget.TransactionAverage, 0) AS TransactionAverage
-                ,tmpBudget.RANK
+                ,tmpBudget.RankID
                 ,tmpBudget.IsBalanceMonthlyNegative
 	FROM 		tmpBudget tmpBudget				
 	ORDER BY 	tmpBudget.BudgetGroup
 				,tmpBudget.BudgetCategory
 	;
     
-END
+END;;
+DELIMITER ;

@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetItemInsert`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetItemInsert`(BudgetNumber INT, BudgetCategoryID INT, BudgetTypeID INT, Amount DECIMAL(10, 4))
 BEGIN
 	INSERT INTO BudgetItem
@@ -16,4 +22,5 @@ BEGIN
             ,NOW()
             ,'User'
 	;
-END
+END;;
+DELIMITER ;

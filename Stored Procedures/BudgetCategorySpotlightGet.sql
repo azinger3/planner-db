@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetCategorySpotlightGet`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetCategorySpotlightGet`()
 BEGIN
 	DECLARE SessionID VARCHAR(100);
@@ -207,4 +213,5 @@ BEGIN
 	DELETE FROM	tmpBudgetCategorySpotlight 
 	WHERE		tmpBudgetCategorySpotlight.SessionID = SessionID
     ;
-END
+END;;
+DELIMITER ;

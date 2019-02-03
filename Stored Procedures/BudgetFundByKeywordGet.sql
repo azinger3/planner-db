@@ -1,3 +1,10 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetFundByKeywordGet`;
+
+DELIMITER ;;
+
+
 CREATE PROCEDURE `BudgetFundByKeywordGet`(Keyword VARCHAR(100))
 BEGIN
 	SELECT		FundID
@@ -14,4 +21,5 @@ BEGIN
     WHERE		(Fund.FundName LIKE CONCAT('%', Keyword, '%') OR Keyword IS NULL)
     ORDER BY	Fund.FundName
     ;
-END
+END;;
+DELIMITER ;

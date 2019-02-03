@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetSummaryGet`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetSummaryGet`(BudgetMonth DATETIME)
 BEGIN
 
@@ -304,4 +310,5 @@ BEGIN
     ;
 
 
-END
+END;;
+DELIMITER ;

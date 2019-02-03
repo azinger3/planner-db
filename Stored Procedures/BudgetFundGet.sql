@@ -1,3 +1,5 @@
+USE `planner`;
+
 DROP PROCEDURE IF EXISTS `BudgetFundGet`;
 
 DELIMITER ;;
@@ -16,4 +18,5 @@ BEGIN
 	FROM		Fund Fund
     ORDER BY	Fund.FundName
     ;
-END ;;
+END;;
+DELIMITER ;

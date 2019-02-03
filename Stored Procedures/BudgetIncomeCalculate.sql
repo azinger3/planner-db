@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetIncomeCalculate`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetIncomeCalculate`(BudgetNumber INT)
 BEGIN
 	UPDATE	BudgetItem
@@ -9,4 +15,5 @@ BEGIN
 	WHERE	BudgetItem.BudgetCategoryID = 29
 	AND		BudgetItem.BudgetNumber = BudgetNumber
     ;
-END
+END;;
+DELIMITER ;

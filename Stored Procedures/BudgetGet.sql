@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetGet`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetGet`()
 BEGIN
 	SELECT 		Budget.BudgetID
@@ -14,4 +20,5 @@ BEGIN
     WHERE		TIMESTAMPDIFF(MONTH, Budget.BudgetMonth, NOW()) <= 12
 	ORDER BY	Budget.BudgetMonth DESC
 	;
-END
+END;;
+DELIMITER ;

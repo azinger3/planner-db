@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetGroupByKeywordGet`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetGroupByKeywordGet`(Keyword VARCHAR(100))
 BEGIN
 	SELECT		BudgetGroupID
@@ -10,4 +16,5 @@ BEGIN
      WHERE		(BudgetGroup.BudgetGroup LIKE CONCAT('%', Keyword, '%') OR Keyword IS NULL)
     ORDER BY	BudgetGroup.BudgetGroup
 	;
-END
+END;;
+DELIMITER ;

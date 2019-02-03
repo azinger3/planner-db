@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetByMonthInsert`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetByMonthInsert`(BudgetMonth DATETIME)
 BEGIN
 	DECLARE BudgetNumberPrevious INT;
@@ -87,4 +93,5 @@ BEGIN
     
     
     
-END
+END;;
+DELIMITER ;

@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetCategoryGet`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetCategoryGet`()
 BEGIN
 	SELECT		BudgetGroup.BudgetGroupID
@@ -12,4 +18,5 @@ BEGIN
     AND			BudgetCategory.BudgetCategoryID <> 29 -- Income
     ORDER BY	BudgetCategory.BudgetCategory ASC
     ;
-END
+END;;
+DELIMITER ;

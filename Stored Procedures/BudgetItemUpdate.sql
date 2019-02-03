@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetItemUpdate`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetItemUpdate`(BudgetItemID INT, BudgetNumber INT, BudgetCategoryID INT, BudgetTypeID INT, Amount DECIMAL(10, 4))
 BEGIN
 	UPDATE	BudgetItem
@@ -9,4 +15,5 @@ BEGIN
 			,BudgetItem.ModifyBy			= 'User'
 	WHERE	BudgetItem.BudgetItemID = BudgetItemID
     ;
-END
+END;;
+DELIMITER ;

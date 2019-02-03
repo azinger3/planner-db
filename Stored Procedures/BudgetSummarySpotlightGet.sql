@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetSummarySpotlightGet`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetSummarySpotlightGet`()
 BEGIN
 	SELECT 		Budget.BudgetID
@@ -15,4 +21,5 @@ BEGIN
 	ORDER BY	Budget.BudgetMonth DESC
     LIMIT 		13
 	;
-END
+END;;
+DELIMITER ;

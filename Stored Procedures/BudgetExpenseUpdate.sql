@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetExpenseUpdate`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetExpenseUpdate`(BudgetItemID INT, BudgetNumber INT, Amount DECIMAL(10, 4), BudgetGroupID INT, BudgetGroup VARCHAR(100), BudgetCategoryID INT, BudgetCategory VARCHAR(100), Description VARCHAR(1000), Note VARCHAR(1000), IsEssential INT, HasSpotlight INT, HasFundFlg INT, FundID INT, FundName VARCHAR(100), StartingBalance DECIMAL(10, 4))
 BEGIN 
 	IF BudgetGroupID > 0 THEN
@@ -37,4 +43,6 @@ BEGIN
 	ELSE
         CALL BudgetItemInsert(BudgetNumber, BudgetCategoryID, 2, Amount);
 	END IF;
-END
+
+END;;
+DELIMITER ;

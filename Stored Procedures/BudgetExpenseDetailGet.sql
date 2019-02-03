@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `BudgetExpenseDetailGet`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `BudgetExpenseDetailGet`(BudgetItemID INT)
 BEGIN
 	SELECT		BudgetItem.BudgetItemID
@@ -24,4 +30,5 @@ BEGIN
 	ON			Fund.FundID = BudgetCategory.FundID
 	WHERE		BudgetItem.BudgetItemID = BudgetItemID
 	;
-END
+END;;
+DELIMITER ;

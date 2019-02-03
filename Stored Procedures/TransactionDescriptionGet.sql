@@ -1,3 +1,9 @@
+USE `planner`;
+
+DROP PROCEDURE IF EXISTS `TransactionDescriptionGet`;
+
+DELIMITER ;;
+
 CREATE PROCEDURE `TransactionDescriptionGet`(Keyword VARCHAR(100))
 BEGIN
 	SET @Description = '';			
@@ -16,7 +22,7 @@ BEGIN
 						,RSRank.TransactionID
 						,RSRank.Amount
                         ,RSRank.BudgetCategoryID
-						,RSRank.RANK
+						,RSRank.RankID
 				FROM
 				(
 					SELECT  RSTransaction.Description
@@ -36,7 +42,7 @@ BEGIN
 														@i + 1 -- ELSE TransactionDT
 													),
 											1 -- ELSE Description
-										) AS RANK
+										) AS RankID
 							,@Description := RSTransaction.Description    
 							,@TransactionDT := RSTransaction.TransactionDT
 							,@TransactionID := RSTransaction.TransactionID
@@ -55,7 +61,8 @@ BEGIN
 				) RSRank
 			) RS
 	WHERE	(RS.Description LIKE CONCAT('%', Keyword, '%') OR Keyword IS NULL)
-    AND		RS.RANK = 1
+    AND		RS.RankID = 1
     
 	;
-END
+END;;
+DELIMITER ;
