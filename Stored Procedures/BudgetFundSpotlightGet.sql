@@ -32,6 +32,7 @@ BEGIN
     INNER JOIN	Fund Fund
     ON			Fund.FundID = BudgetCategory.FundID
 	WHERE 		BudgetCategory.HasSpotlight = 1
+	AND			Fund.ActiveFlg = 1
 	;
     
 	UPDATE		tmpBudgetFundSpotlight
