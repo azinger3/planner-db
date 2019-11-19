@@ -30,7 +30,7 @@ SET @varSessionID = UUID();
 ***********************************************************************************************/
 
 SET @varEffectiveDT = CONVERT_TZ(prmEffectiveDT, '+00:00','-05:00');
-SET @varStartDT = DATE_ADD(@varEffectiveDT, INTERVAL -30 DAY);
+SET @varStartDT = DATE_ADD(@varEffectiveDT, INTERVAL -3 MONTH);
 
 
 DROP TEMPORARY TABLE IF EXISTS tmpParameter;
