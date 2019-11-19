@@ -2,4 +2,4 @@ USE planner;
 
 
 
-CALL TransactionSpotlightGet('2019-11-16');
+CALL TransactionSpotlightGet('2019-01-16');
