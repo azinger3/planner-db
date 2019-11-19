@@ -13,7 +13,7 @@ BEGIN
 	DECLARE i INT; 
     
 	SET varEffectiveDT = '2014-03-16';
-    SET varMaxDT = '2085-09-12';
+    SET varMaxDT = '2085-09-11';
 	SET i = 1; 
     
     
