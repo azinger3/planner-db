@@ -30,6 +30,7 @@ CREATE TABLE tmpTransactionSpotlight
     ,AmountDaily						DECIMAL(10, 0)
     ,DateRangeWeekBegin		VARCHAR(100)
     ,DateRangeWeekEnd			VARCHAR(100)
+    ,DateRangeWeek				VARCHAR(100)
     ,DateRangeDaily					VARCHAR(100)
     ,TransactionCountYearly		INT(10)
 	,TransactionCountMonthly	INT(10)

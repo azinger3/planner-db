@@ -29,8 +29,8 @@ SET @varSessionID = UUID();
 	STEP 01:		Create temporary structure to store parameter & scope data
 ***********************************************************************************************/
 
-SET @varEffectiveDT = CONVERT_TZ(prmEffectiveDT, '+00:00','-05:00');
-SET @varStartDT = DATE_ADD(@varEffectiveDT, INTERVAL -3 MONTH);
+SET @varEffectiveDT = CONVERT_TZ(@prmEffectiveDT, '+00:00','-05:00');
+SET @varStartDT = DATE_ADD(@varEffectiveDT, INTERVAL -30 DAY);
 
 
 DROP TEMPORARY TABLE IF EXISTS tmpParameter;
@@ -214,7 +214,7 @@ SET					tmpTransactionSpotlight.AmountDaily 			= RS.AmountDaily
 	STEP 04:		Update Date Ranges (by date part)
 ***********************************************************************************************/
 
--- Weekly
+-- Weekly (raw)
 UPDATE      	tmpTransactionSpotlight
 INNER JOIN 	(
 							SELECT      	tmpTransactionSpotlight.SessionID																																														AS SessionID
@@ -231,6 +231,44 @@ ON          			tmpTransactionSpotlight.SessionID 						= RS.SessionID
 AND				tmpTransactionSpotlight.KeyID 								= RS.KeyID
 SET					tmpTransactionSpotlight.DateRangeWeekBegin	= RS.DateRangeWeekBegin
 						,tmpTransactionSpotlight.DateRangeWeekEnd 		= RS.DateRangeWeekEnd
+;
+
+
+-- Weekly (formatted - same month)
+UPDATE      	tmpTransactionSpotlight
+INNER JOIN 	(
+							SELECT      	tmpTransactionSpotlight.SessionID																						AS SessionID
+													,tmpTransactionSpotlight.KeyID																								AS KeyID
+													,tmpTransactionSpotlight.DateRangeWeekBegin 																	AS DateRangeWeekBegin
+													,DAY(CalendarWeekEnd) 																										AS CalendarWeekEndDay
+													,CONCAT(tmpTransactionSpotlight.DateRangeWeekBegin, ' - ', DAY(CalendarWeekEnd))	AS DateRangeWeek
+							FROM        		tmpTransactionSpotlight tmpTransactionSpotlight
+							INNER JOIN	tmpParameter tmpParameter
+							ON					tmpParameter.SessionID = tmpTransactionSpotlight.SessionID
+							WHERE			MONTH(CalendarWeekBegin) = MONTH(CalendarWeekEnd)
+						) RS
+ON          			tmpTransactionSpotlight.SessionID 				= RS.SessionID
+AND				tmpTransactionSpotlight.KeyID 						= RS.KeyID
+SET					tmpTransactionSpotlight.DateRangeWeek		= RS.DateRangeWeek
+;
+
+
+-- Weekly (formatted - overlap month)
+UPDATE      	tmpTransactionSpotlight
+INNER JOIN 	(
+							SELECT      	tmpTransactionSpotlight.SessionID																															AS SessionID
+													,tmpTransactionSpotlight.KeyID																																	AS KeyID
+													,tmpTransactionSpotlight.DateRangeWeekBegin 																										AS DateRangeWeekBegin
+													,tmpTransactionSpotlight.DateRangeWeekEnd																											AS CalendarWeekEndDay
+													,CONCAT(tmpTransactionSpotlight.DateRangeWeekBegin, ' - ', tmpTransactionSpotlight.DateRangeWeekEnd)	AS DateRangeWeek
+							FROM        		tmpTransactionSpotlight tmpTransactionSpotlight
+							INNER JOIN	tmpParameter tmpParameter
+							ON					tmpParameter.SessionID = tmpTransactionSpotlight.SessionID
+							WHERE			MONTH(CalendarWeekBegin) <> MONTH(CalendarWeekEnd)
+						) RS
+ON          			tmpTransactionSpotlight.SessionID 				= RS.SessionID
+AND				tmpTransactionSpotlight.KeyID 						= RS.KeyID
+SET					tmpTransactionSpotlight.DateRangeWeek		= RS.DateRangeWeek
 ;
 
 
@@ -255,7 +293,6 @@ SET					tmpTransactionSpotlight.DateRangeDaily	= RS.DateRangeDaily
 /**********************************************************************************************
 	STEP 05:		Update Transaction Counts (by date part)
 ***********************************************************************************************/
-    
 
 -- Yearly
 UPDATE      	tmpTransactionSpotlight
@@ -274,7 +311,6 @@ SET					tmpTransactionSpotlight.TransactionCountYearly 	= RS.TransactionCountYea
 ;
 
 
-
 -- Monthly
 UPDATE      	tmpTransactionSpotlight
 INNER JOIN 	(
@@ -290,7 +326,6 @@ ON          			tmpTransactionSpotlight.SessionID 							= RS.SessionID
 AND				tmpTransactionSpotlight.TransactionMonth 				= RS.TransactionMonth
 SET					tmpTransactionSpotlight.TransactionCountMonthly 	= RS.TransactionCountMonthly
 ;
-    
 
     
 -- Weekly
@@ -308,7 +343,6 @@ ON          			tmpTransactionSpotlight.SessionID 							= RS.SessionID
 AND				tmpTransactionSpotlight.TransactionWeek 				= RS.TransactionWeek
 SET					tmpTransactionSpotlight.TransactionCountWeekly 	= RS.TransactionCountWeekly
 ;    
-
 
 
 -- Daily
@@ -358,6 +392,7 @@ SELECT			tmpTransactionSpotlight.KeyID 										AS KeyID
 						,tmpTransactionSpotlight.AmountDaily 							AS AmountDaily
 						,tmpTransactionSpotlight.DateRangeWeekBegin 			AS DateRangeWeekBegin
 						,tmpTransactionSpotlight.DateRangeWeekEnd 				AS DateRangeWeekEnd
+                        ,tmpTransactionSpotlight.DateRangeWeek					AS DateRangeWeek
 						,tmpTransactionSpotlight.DateRangeDaily 					AS DateRangeDaily
 						,tmpTransactionSpotlight.TransactionCountYearly 		AS TransactionCountYearly
 						,tmpTransactionSpotlight.TransactionCountMonthly 		AS TransactionCountMonthly
