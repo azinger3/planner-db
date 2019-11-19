@@ -29,7 +29,7 @@ SET @varSessionID = UUID();
 	STEP 01:		Create temporary structure to store parameter & scope data
 ***********************************************************************************************/
 
-SET @varEffectiveDT = CONVERT_TZ(@prmEffectiveDT, '+00:00','-05:00');
+SET @varEffectiveDT = CONVERT_TZ(prmEffectiveDT, '+00:00','-05:00');
 SET @varStartDT = DATE_ADD(@varEffectiveDT, INTERVAL -30 DAY);
 
 
