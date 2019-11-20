@@ -51,24 +51,29 @@ SELECT 	@varEffectiveDT	AS EffectiveDT
 	Final Result
 ***********************************************************************************************/
 
-SELECT 			Transaction.TransactionID							AS TransactionID
-						,Transaction.TransactionTypeID					AS TransactionTypeID
-						,Transaction.TransactionNumber				AS TransactionNumber
-						,Transaction.TransactionDT 						AS TransactionDT
-                        ,DateMask(Transaction.TransactionDT)		AS TransactionDTMask
-						,Transaction.BudgetNumber 						AS BudgetNumber
-						,Transaction.BudgetCategoryID 					AS BudgetCategoryID
-						,BudgetCategory.BudgetCategory 				AS BudgetCategory
-						,BudgetGroup.BudgetGroupID 					AS BudgetGroupID
-						,BudgetGroup.BudgetGroup 						AS BudgetGroup
-						,Transaction.Amount 									AS Amount
-						,Transaction.Description 							AS Description
-						,Transaction.Note 										AS Note
-						,Transaction.CreateDT 								AS CreateDT
-						,Transaction.CreateBy 								AS CreateBy
-						,Transaction.ModifyDT 								AS ModifyDT
-						,Transaction.ModifyBy 								AS ModifyBy
-						,Transaction.ActiveFlg 								AS ActiveFlg
+SELECT 			Transaction.TransactionID											AS TransactionID
+						,Transaction.TransactionTypeID									AS TransactionTypeID
+						,Transaction.TransactionNumber								AS TransactionNumber
+						,Transaction.TransactionDT 										AS TransactionDT
+                        ,DateMask(Transaction.TransactionDT)						AS TransactionDTMask
+						,Transaction.BudgetNumber 										AS BudgetNumber
+						,Transaction.BudgetCategoryID 									AS BudgetCategoryID
+						,BudgetCategory.BudgetCategory 								AS BudgetCategory
+						,BudgetGroup.BudgetGroupID 									AS BudgetGroupID
+						,BudgetGroup.BudgetGroup 										AS BudgetGroup
+						,Transaction.Amount													AS AmountRaw
+                        ,CAST(Transaction.Amount AS DECIMAL(10, 2))		AS Amount
+						,Transaction.Description 											AS Description
+						,Transaction.Note 														AS Note
+						,Transaction.CreateDT 												AS CreateDT
+						,Transaction.CreateBy 												AS CreateBy
+						,Transaction.ModifyDT 												AS ModifyDT
+						,Transaction.ModifyBy 												AS ModifyBy
+						,Transaction.ActiveFlg 												AS ActiveFlg
+                        ,RANK() OVER (	ORDER BY			Transaction.Amount 				DESC
+																				,Transaction.TransactionDT	ASC
+																				,Transaction.TransactionID		ASC
+						) AS RankID
 FROM				Transaction Transaction
 INNER JOIN	tmpParameter tmpParameter
 ON					tmpParameter.StartDT < Transaction.TransactionDT
@@ -76,10 +81,8 @@ INNER JOIN	BudgetCategory BudgetCategory
 ON					BudgetCategory.BudgetCategoryID = Transaction.BudgetCategoryID
 INNER JOIN	BudgetGroup BudgetGroup
 ON					BudgetGroup.BudgetGroupID = BudgetCategory.BudgetGroupID
-WHERE			Transaction.TransactionTypeID = 2
-AND				BudgetGroup.BudgetGroupID IN 	(
-																					23 -- Flexible
-																				)
+WHERE			Transaction.TransactionTypeID = 2	-- Expense
+AND				BudgetGroup.BudgetGroupID IN (23)	-- Flexible
 ORDER BY		Transaction.Amount 				DESC
 						,Transaction.TransactionDT	ASC
 						,Transaction.TransactionID		ASC
