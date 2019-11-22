@@ -122,12 +122,17 @@ SELECT 			tmpParameter.SessionID						AS SessionID
 						,Transaction.Description							AS Description
 						,Transaction.Note									AS Note
 FROM				Transaction Transaction
+INNER JOIN	BudgetCategory BudgetCategory
+ON					BudgetCategory.BudgetCategoryID = Transaction.BudgetCategoryID
+INNER JOIN	BudgetGroup BudgetGroup
+ON					BudgetGroup.BudgetGroupID = BudgetCategory.BudgetGroupID
 INNER JOIN	Calendar Calendar
 ON					Calendar.EffectiveDT = Transaction.TransactionDT
 INNER JOIN	tmpParameter tmpParameter
-ON					tmpParameter.StartWeekID <= Calendar.WeekID		-- Start less than all weeks --> Give me these <-- End greater than all weeks
+ON					tmpParameter.StartWeekID <= Calendar.WeekID 	-- Start less than all weeks --> Give me these <-- End greater than all weeks
 AND 				tmpParameter.EndWeekID >= Calendar.WeekID
-WHERE			Transaction.TransactionTypeID = 2
+WHERE			Transaction.TransactionTypeID = 2		-- Expense
+AND				BudgetGroup.BudgetGroupID IN (23)		-- Flexible
 ORDER BY		Transaction.TransactionDT 	ASC
 						,Transaction.TransactionID		ASC
 ;
