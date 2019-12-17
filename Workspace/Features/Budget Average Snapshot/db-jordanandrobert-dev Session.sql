@@ -1,1 +1,0 @@
-select * from Transaction limit 10;
