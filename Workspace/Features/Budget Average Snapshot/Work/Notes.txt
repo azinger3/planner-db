@@ -1,0 +1,21 @@
+UX
+
+for each fiscal-year-to-date period (4 to 5, 4 to 6, 4 to 7,...)
+	capture the period stats
+		FYTDPeriodID
+		IncomeActual
+		IncomeAverage
+		ExpenseActual
+		ExpenseAverage
+		TotalIncomeVsExpenseActual
+		TotalIncomeVsExpenseAverage
+		IsTotalIncomeVsExpenseActualNegative
+		IsTotalIncomeVsExpenseAverageNegative
+
+save each period collectively via an ID (201904201907).
+
+sp for flattening out average data, etl pull from sp, loads straight up to dynamo.
+
+graph pulls from api, api pulls from dynamo.
+
+allow for a re-generation for a whole period ID.
