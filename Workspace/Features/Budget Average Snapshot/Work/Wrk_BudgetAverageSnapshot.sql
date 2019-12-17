@@ -1,12 +1,13 @@
 USE planner;
 
 -- *** averages snapshot
--- run ***
--- top 3 categories
+-- run regular AverageGet sp
+-- get for same params
+-- reduce down to yearly stats
+-- only pull the needed columns
+-- return result set
 
 
--- *** savings balance snapshot... Fund
--- *** surplus or loss yearly snapshot... Budget
 
 SET @prmEffectiveDT = '2019-01-19';
 
