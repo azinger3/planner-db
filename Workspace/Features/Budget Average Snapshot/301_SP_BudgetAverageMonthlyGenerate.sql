@@ -10,11 +10,11 @@ USE `planner`;
 SET @prmStartDT = '2019-04-01';
 SET @prmEndDT = '2019-07-01';
 
-select @prmStartDT, @prmEndDT;
+
 /********************************************************************************************** 
 PURPOSE:		Get Budget Average Monthly Snapshot
-AUTHOR:			Rob Azinger
-DATE:			12/19/2019
+AUTHOR:		Rob Azinger
+DATE:				12/19/2019
 NOTES:			Snapshot Table - tmpTransactionSpotlight
 CHANGE CONTROL:		 
 ***********************************************************************************************/
@@ -32,11 +32,11 @@ DROP TEMPORARY TABLE IF EXISTS tmpParameter;
 
 CREATE TEMPORARY TABLE tmpParameter
 (
-	KeyID						INT(10) NOT NULL AUTO_INCREMENT
-    ,StartDT					DATETIME
-	,EndDT						DATETIME
-	,StartID					INT(10)
-	,EndID						INT(10)
+	KeyID										INT(10) NOT NULL AUTO_INCREMENT
+    ,StartDT									DATETIME
+	,EndDT									DATETIME
+	,StartID									INT(10)
+	,EndID										INT(10)
 	,BudgetAverageMonthlyID		INT(20)
 	,PRIMARY KEY (`KeyID`)
 );
@@ -47,7 +47,7 @@ INSERT INTO tmpParameter
     ,EndDT
 )
 SELECT 	@varStartDT 	AS StartDT
-		,@varEndDT		AS EndDT
+				,@varEndDT	AS EndDT
 ;
 
 select * from tmpParameter;
