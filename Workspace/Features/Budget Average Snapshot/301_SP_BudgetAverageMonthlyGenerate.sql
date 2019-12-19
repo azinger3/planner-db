@@ -1,61 +1,69 @@
 USE `planner`;
 
+-- DROP PROCEDURE IF EXISTS `BudgetAverageMonthlyGenerate`;
+
+-- DELIMITER ;;
+-- CREATE PROCEDURE `BudgetAverageMonthlyGenerate`(prmEffectiveDT DATETIME)
+-- BEGIN
 
 
-DROP PROCEDURE IF EXISTS `TransactionSpotlightGet`;
+SET @prmStartDT = '2019-04-01';
+SET @prmEndDT = '2019-07-01';
 
-DELIMITER ;;
-CREATE PROCEDURE `TransactionSpotlightGet`(prmEffectiveDT DATETIME)
-BEGIN
-
-
+select @prmStartDT, @prmEndDT;
 /********************************************************************************************** 
-PURPOSE:		Get Transaction Spotlight
-AUTHOR:		Rob Azinger
-DATE:				11/16/2019
-NOTES:			Temporary Session Table - tmpTransactionSpotlight
+PURPOSE:		Get Budget Average Monthly Snapshot
+AUTHOR:			Rob Azinger
+DATE:			12/19/2019
+NOTES:			Snapshot Table - tmpTransactionSpotlight
 CHANGE CONTROL:		 
 ***********************************************************************************************/
-
-/**********************************************************************************************
-	Open Session
-***********************************************************************************************/
-
-SET @varSessionID = UUID();
-
 
 
 /**********************************************************************************************
 	STEP 01:		Create temporary structure to store parameter & scope data
 ***********************************************************************************************/
 
-SET @varEffectiveDT = CONVERT_TZ(prmEffectiveDT, '+00:00','-05:00');
-SET @varStartDT = DATE_ADD(@varEffectiveDT, INTERVAL -3 MONTH);
+SET @varStartDT = @prmStartDT;
+SET @varEndDT = @prmEndDT;
 
 
 DROP TEMPORARY TABLE IF EXISTS tmpParameter;
 
 CREATE TEMPORARY TABLE tmpParameter
 (
-	KeyID                   	INT(10) NOT NULL AUTO_INCREMENT
-    ,SessionID				VARCHAR(100)
-    ,EffectiveDT			DATETIME
-    ,StartWeekID			INT(10)
-    ,EndWeekID			INT(10)
+	KeyID						INT(10) NOT NULL AUTO_INCREMENT
+    ,StartDT					DATETIME
+	,EndDT						DATETIME
+	,StartID					INT(10)
+	,EndID						INT(10)
+	,BudgetAverageMonthlyID		INT(20)
 	,PRIMARY KEY (`KeyID`)
 );
 
 INSERT INTO tmpParameter
 (
-	SessionID
-    ,EffectiveDT
+	StartDT
+    ,EndDT
 )
-SELECT 	@varSessionID 		AS SessionID
-				,@varEffectiveDT	AS EffectiveDT
+SELECT 	@varStartDT 	AS StartDT
+		,@varEndDT		AS EndDT
 ;
 
+select * from tmpParameter;
 
--- Update Start Week ID
+-- Update Start ID
+
+-- UPDATE 		tmpParameter
+-- INNER JOIN	(
+-- 							SELECT 		Calendar.WeekID	AS StartWeekID
+-- 							FROM			Calendar Calendar
+-- 							WHERE		DATEDIFF(Calendar.EffectiveDT, @varStartDT) = 0
+-- 						) RS
+-- SET					tmpParameter.StartWeekID = RS.StartWeekID
+-- ;
+
+-- Update End ID
 UPDATE 			tmpParameter
 INNER JOIN	(
 							SELECT 		Calendar.WeekID	AS StartWeekID
@@ -65,15 +73,14 @@ INNER JOIN	(
 SET					tmpParameter.StartWeekID = RS.StartWeekID
 ;
 
-
--- Update End Week ID
+-- Update Budget Average Monthly ID
 UPDATE 			tmpParameter
 INNER JOIN	(
-							SELECT 		Calendar.WeekID	AS EndWeekID
+							SELECT 		Calendar.WeekID	AS StartWeekID
 							FROM			Calendar Calendar
-							WHERE		DATEDIFF(Calendar.EffectiveDT, @varEffectiveDT) = 0
+							WHERE		DATEDIFF(Calendar.EffectiveDT, @varStartDT) = 0
 						) RS
-SET					tmpParameter.EndWeekID = RS.EndWeekID
+SET					tmpParameter.StartWeekID = RS.StartWeekID
 ;
 
 
