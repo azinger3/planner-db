@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS snpBudgetAverageMonthly;
 CREATE TABLE snpBudgetAverageMonthly
 (
 	KeyID							INT(10) NOT NULL AUTO_INCREMENT
-	,BudgetAverageMonthlyID 		INT(20)
+	,BudgetAverageMonthlyID 		VARCHAR(20)
 	,IncomeActual 					DECIMAL(10, 4)
 	,IncomeAverage 					DECIMAL(10, 4)
 	,ExpenseActual 					DECIMAL(10, 4)
