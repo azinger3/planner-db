@@ -29,7 +29,7 @@ SET @varSessionID = UUID();
 
 SET @varStartDT = @prmStartDT;
 SET @varEndDT = @prmEndDT;
-SET @varTimeSpanMonth = TIMESTAMPDIFF(MONTH, @varStartDT, @varEndDT);
+SET @varTimeSpanMonth = TIMESTAMPDIFF(MONTH, @prmStartDT, @prmEndDT);
 
 
 DROP TEMPORARY TABLE IF EXISTS tmpParameter;
@@ -157,7 +157,6 @@ WHERE			tmpBudgetAverage.SessionID = @varSessionID
 ;
 
 
-
 UPDATE			tmpBudgetAverage
 INNER JOIN	(
 							SELECT 			SUM(tmpBudgetAverage.Amount)	AS IncomeActual 
@@ -255,7 +254,11 @@ ON					tmpParameter.SessionID = tmpBudgetAverage.SessionID
 ;
 
 
+
+select * from tmpParameter;
+select * from tmpBudgetAverage;
 select * from snpBudgetAverageMonthly;
+
 
 
 /**********************************************************************************************
@@ -267,3 +270,6 @@ FROM					tmpBudgetAverage
 INNER JOIN		tmpParameter tmpParameter
 ON						tmpParameter.SessionID = tmpBudgetAverage.SessionID
 ;
+
+
+select * from tmpBudgetAverage;
