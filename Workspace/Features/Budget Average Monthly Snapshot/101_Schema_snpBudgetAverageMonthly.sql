@@ -7,12 +7,12 @@ CREATE TABLE snpBudgetAverageMonthly
 (
 	KeyID							INT(10) NOT NULL AUTO_INCREMENT
 	,BudgetAverageMonthlyID 				VARCHAR(20)
-	,IncomeActual 								DECIMAL(10, 4)
-	,IncomeAverage 								DECIMAL(10, 4)
-	,ExpenseActual 								DECIMAL(10, 4)
-	,ExpenseAverage 							DECIMAL(10, 4)
-	,TotalIncomeVsExpenseActual 		DECIMAL(10, 4)
-	,TotalIncomeVsExpenseAverage	DECIMAL(10, 4)
+	,IncomeActual 								DECIMAL(10, 2)
+	,IncomeAverage 								DECIMAL(10, 2)
+	,ExpenseActual 								DECIMAL(10, 2)
+	,ExpenseAverage 							DECIMAL(10, 2)
+	,TotalIncomeVsExpenseActual 		DECIMAL(10, 2)
+	,TotalIncomeVsExpenseAverage	DECIMAL(10, 2)
     ,SnapshotHash								VARCHAR(100)						
 	,SnapshotDT 									DATETIME
 	,CreateDT 										DATETIME

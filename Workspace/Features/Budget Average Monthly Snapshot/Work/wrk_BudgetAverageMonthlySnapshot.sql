@@ -172,9 +172,6 @@ WHERE			tmpBudgetAverage.SessionID = @varSessionID
 
 
 
-/**********************************************************************************************
-	STEP 03:		Set Row Hash
-***********************************************************************************************/
 
 SELECT 			MD5(CONCAT(
 							RS.BudgetAverageMonthlyID 					
@@ -195,9 +192,6 @@ FROM 			(
 													,IFNULL(tmpBudgetAverage.ExpenseAverage, 0) 							AS ExpenseAverage
 													,IFNULL(tmpBudgetAverage.TotalIncomeVsExpenseActual, 0) 		AS TotalIncomeVsExpenseActual
 													,IFNULL(tmpBudgetAverage.TotalIncomeVsExpenseAverage, 0)		AS TotalIncomeVsExpenseAverage
-													,CONVERT_TZ(NOW(), '+00:00','-00:00')											AS SnapshotDT
-													,CONVERT_TZ(NOW(), '+00:00','-00:00')											AS CreateDT
-													,'Snapshot' 																							AS CreateBy
 							FROM 			tmpBudgetAverage tmpBudgetAverage
 							WHERE			tmpBudgetAverage.SessionID = @varSessionID
 						) RS
@@ -293,6 +287,20 @@ SET					snpBudgetAverageMonthly.IncomeActual = RS.IncomeActual
 
 -- select * from tmpBudgetAverage;
 select * from snpBudgetAverageMonthly;
+-- select * from tmpBudgetAverage;
+
+
+
+/*
+
+update snpBudgetAverageMonthly set IncomeAverage = 11111;
+
+truncate table tmpBudgetAverage;
+
+truncate table snpBudgetAverageMonthly;
+
+*/
+
 
 
 
@@ -303,32 +311,3 @@ select * from snpBudgetAverageMonthly;
 DELETE FROM	tmpBudgetAverage
 WHERE				tmpBudgetAverage.SessionID = @varSessionID
 ;
-
-
-
--- select * from tmpBudgetAverage;
-
-
-SELECT	@varStartDT 									AS StartDT
-				,@varEndDT 									AS EndDT
-                ,@varLastDT 									AS LastDT
-				,@varStartID 									AS StartID
-				,@varEndID 									AS EndID
-				,@varBudgetAverageMonthlyID		AS BudgetAverageMonthlyID
-				,@varTimeSpanMonth 					AS TimeSpanMonth
-				,@varSnapshotHash						AS SnapshotHash
-				,@varHasExistingFlg 						AS HasExistingFlg
-				,@varHasVarianceFlg 					AS HasVarianceFlg
-;
-
-
-
-/*
-
-update snpBudgetAverageMonthly set IncomeAverage = 3333;
-
-truncate table tmpBudgetAverage;
-
-truncate table snpBudgetAverageMonthly;
-
-*/
