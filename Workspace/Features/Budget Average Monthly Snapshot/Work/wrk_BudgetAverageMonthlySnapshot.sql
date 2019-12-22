@@ -2,7 +2,7 @@ USE `planner`;
 
 
 SET @prmStartDT = '2019-04-01';
-SET @prmEndDT = '2019-06-01';
+SET @prmEndDT = '2019-08-01';
 
 
 
@@ -35,6 +35,9 @@ SET @varEndID = CONCAT(YEAR(@varEndDT), LPAD(MONTH(@varEndDT), 2, '0' ));
 SET @varBudgetAverageMonthlyID = CONCAT(@varStartID, @varEndID);
 SET @varTimeSpanMonth = TIMESTAMPDIFF(MONTH, @varStartDT, @varEndDT);
 SET @varSnapshotHash = '';
+SET @varHasExistingFlg = 0;
+SET @varHasVarianceFlg = 0;
+
 
 /*
 SELECT	@varStartDT 									AS StartDT
@@ -45,6 +48,8 @@ SELECT	@varStartDT 									AS StartDT
 				,@varBudgetAverageMonthlyID		AS BudgetAverageMonthlyID
 				,@varTimeSpanMonth 					AS TimeSpanMonth
 				,@varSnapshotHash						AS SnapshotHash
+				,@varHasExistingFlg 						AS varHasExistingFlg
+				.@varHasVarianceFlg 					AS varHasVarianceFlg
 ;
 */
 
@@ -179,7 +184,7 @@ SELECT 			MD5(CONCAT(
 							,RS.ExpenseAverage 							
 							,RS.TotalIncomeVsExpenseActual 		
 							,RS.TotalIncomeVsExpenseAverage
-						))	AS SnapshotHash 
+						))	AS SnapshotHash
 INTO				@varSnapshotHash
 FROM 			(
 							SELECT 			DISTINCT
@@ -201,19 +206,18 @@ WHERE			RS.BudgetAverageMonthlyID = @varBudgetAverageMonthlyID
 
 
 
-SELECT 	* 
+SELECT	1 AS varHasExistingFlg
+INTO		@varHasExistingFlg
 FROM 	snpBudgetAverageMonthly
-WHERE	SnapshotHash = @varSnapshotHash
+WHERE	snpBudgetAverageMonthly.BudgetAverageMonthlyID = @varBudgetAverageMonthlyID
 ;
 
 
-
-/**********************************************************************************************
-	STEP 03:		Delete Budget Average Monthly data (if exists)
-***********************************************************************************************/
-
-DELETE FROM	snpBudgetAverageMonthly
-WHERE				BudgetAverageMonthlyID = @varBudgetAverageMonthlyID	
+SELECT	1 AS varHasVarianceFlg
+INTO		@varHasVarianceFlg
+FROM 	snpBudgetAverageMonthly
+WHERE	snpBudgetAverageMonthly.BudgetAverageMonthlyID = @varBudgetAverageMonthlyID
+AND		snpBudgetAverageMonthly.SnapshotHash <> @varSnapshotHash
 ;
 
 
@@ -231,6 +235,7 @@ INSERT INTO snpBudgetAverageMonthly
 	,ExpenseAverage
 	,TotalIncomeVsExpenseActual
 	,TotalIncomeVsExpenseAverage
+    ,SnapshotHash
 	,SnapshotDT
 	,CreateDT
 	,CreateBy
@@ -243,41 +248,50 @@ SELECT 		DISTINCT
 					,IFNULL(tmpBudgetAverage.ExpenseAverage, 0) 							AS ExpenseAverage
 					,IFNULL(tmpBudgetAverage.TotalIncomeVsExpenseActual, 0) 		AS TotalIncomeVsExpenseActual
 					,IFNULL(tmpBudgetAverage.TotalIncomeVsExpenseAverage, 0)		AS TotalIncomeVsExpenseAverage
+                    ,@varSnapshotHash 																			AS SnapshotHash
 					,CONVERT_TZ(NOW(), '+00:00','-00:00')											AS SnapshotDT
 					,CONVERT_TZ(NOW(), '+00:00','-00:00')											AS CreateDT
-					,'Snapshot' 																							AS CreateBy
+					,'Snapshot Insert' 																				AS CreateBy
 FROM 		tmpBudgetAverage tmpBudgetAverage
 WHERE		tmpBudgetAverage.SessionID = @varSessionID
+AND			@varHasExistingFlg = 0
 ;
 
 
 
-/**********************************************************************************************
-	STEP xx:		Set Row Hash
-***********************************************************************************************/
-
-UPDATE			snpBudgetAverageMonthly
+UPDATE 			snpBudgetAverageMonthly
 INNER JOIN	(
-							SELECT 		snpBudgetAverageMonthly.KeyID 	AS KeyID
-												,MD5(CONCAT(
-													snpBudgetAverageMonthly.BudgetAverageMonthlyID 					
-													,snpBudgetAverageMonthly.IncomeActual 								
-													,snpBudgetAverageMonthly.IncomeAverage 								
-													,snpBudgetAverageMonthly.ExpenseActual 								
-													,snpBudgetAverageMonthly.ExpenseAverage 							
-													,snpBudgetAverageMonthly.TotalIncomeVsExpenseActual 		
-													,snpBudgetAverageMonthly.TotalIncomeVsExpenseAverage	
-												))	AS SnapshotHash 
-							FROM 		snpBudgetAverageMonthly snpBudgetAverageMonthly	
-                            WHERE		snpBudgetAverageMonthly.BudgetAverageMonthlyID = @varBudgetAverageMonthlyID
+							SELECT 		DISTINCT
+												@varBudgetAverageMonthlyID															AS BudgetAverageMonthlyID
+												,IFNULL(tmpBudgetAverage.IncomeActual, 0) 									AS IncomeActual
+												,IFNULL(tmpBudgetAverage.IncomeAverage, 0) 								AS IncomeAverage
+												,IFNULL(tmpBudgetAverage.ExpenseActual, 0) 								AS ExpenseActual
+												,IFNULL(tmpBudgetAverage.ExpenseAverage, 0) 							AS ExpenseAverage
+												,IFNULL(tmpBudgetAverage.TotalIncomeVsExpenseActual, 0) 		AS TotalIncomeVsExpenseActual
+												,IFNULL(tmpBudgetAverage.TotalIncomeVsExpenseAverage, 0)		AS TotalIncomeVsExpenseAverage
+												,@varSnapshotHash 																			AS SnapshotHash
+												,CONVERT_TZ(NOW(), '+00:00','-00:00')											AS ModifyDT
+												,'Snapshot Update' 																				AS ModifyBy
+							FROM 		tmpBudgetAverage tmpBudgetAverage
+							WHERE		tmpBudgetAverage.SessionID = @varSessionID
+							AND			@varHasExistingFlg = 1
+							AND			@varHasVarianceFlg = 1
 						) RS
-SET					snpBudgetAverageMonthly.SnapshotHash = RS.SnapshotHash
-WHERE 			snpBudgetAverageMonthly.KeyID = RS.KeyID
-; 
+ON					snpBudgetAverageMonthly.BudgetAverageMonthlyID = RS.BudgetAverageMonthlyID
+SET					snpBudgetAverageMonthly.IncomeActual = RS.IncomeActual
+						,snpBudgetAverageMonthly.IncomeAverage = RS.IncomeAverage
+                        ,snpBudgetAverageMonthly.ExpenseActual = RS.ExpenseActual
+                        ,snpBudgetAverageMonthly.ExpenseAverage = RS.ExpenseAverage
+                        ,snpBudgetAverageMonthly.TotalIncomeVsExpenseActual = RS.TotalIncomeVsExpenseActual
+                        ,snpBudgetAverageMonthly.TotalIncomeVsExpenseAverage = RS.TotalIncomeVsExpenseAverage 
+                        ,snpBudgetAverageMonthly.SnapshotHash = RS.SnapshotHash
+                        ,snpBudgetAverageMonthly.ModifyDT = RS.ModifyDT   
+						,snpBudgetAverageMonthly.ModifyBy = RS.ModifyBy   
+;
 
 
 
-select * from tmpBudgetAverage;
+-- select * from tmpBudgetAverage;
 select * from snpBudgetAverageMonthly;
 
 
@@ -292,7 +306,7 @@ WHERE				tmpBudgetAverage.SessionID = @varSessionID
 
 
 
-select * from tmpBudgetAverage;
+-- select * from tmpBudgetAverage;
 
 
 SELECT	@varStartDT 									AS StartDT
@@ -303,13 +317,15 @@ SELECT	@varStartDT 									AS StartDT
 				,@varBudgetAverageMonthlyID		AS BudgetAverageMonthlyID
 				,@varTimeSpanMonth 					AS TimeSpanMonth
 				,@varSnapshotHash						AS SnapshotHash
+				,@varHasExistingFlg 						AS HasExistingFlg
+				,@varHasVarianceFlg 					AS HasVarianceFlg
 ;
 
 
 
 /*
 
-update snpBudgetAverageMonthly set IncomeAverage = 0;
+update snpBudgetAverageMonthly set IncomeAverage = 3333;
 
 truncate table tmpBudgetAverage;
 
