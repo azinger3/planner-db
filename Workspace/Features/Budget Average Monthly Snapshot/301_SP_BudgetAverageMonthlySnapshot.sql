@@ -46,6 +46,7 @@ CREATE TEMPORARY TABLE tmpParameter
 	,StartID									VARCHAR(10)
 	,EndID										VARCHAR(10)
 	,BudgetAverageMonthlyID		VARCHAR(20)
+    ,SnapshotHash						VARCHAR(100)
 	,PRIMARY KEY (`KeyID`)
 );
 
@@ -88,6 +89,13 @@ SET					tmpParameter.EndID = RS.EndID
 -- Update Budget Average Monthly ID
 UPDATE 			tmpParameter
 SET					tmpParameter.BudgetAverageMonthlyID = CONCAT(StartID, EndID)
+;
+
+-- Update Snapshot Hash
+UPDATE 			tmpParameter
+INNER JOIN	snpBudgetAverageMonthly snpBudgetAverageMonthly
+ON					tmpParameter.BudgetAverageMonthlyID = snpBudgetAverageMonthly.BudgetAverageMonthlyID
+SET					tmpParameter.SnapshotHash = snpBudgetAverageMonthly.SnapshotHash
 ;
 
 
@@ -211,7 +219,7 @@ WHERE			tmpBudgetAverage.SessionID = @varSessionID
 
 
 /**********************************************************************************************
-	STEP xx:		Delete Budget Average Monthly data (if exists)
+	STEP 03:		Delete Budget Average Monthly data (if exists)
 ***********************************************************************************************/
 
 DELETE 				snpBudgetAverageMonthly 
@@ -254,6 +262,32 @@ FROM 			tmpBudgetAverage tmpBudgetAverage
 INNER JOIN	tmpParameter tmpParameter
 ON					tmpParameter.SessionID = tmpBudgetAverage.SessionID
 ;
+
+
+
+/**********************************************************************************************
+	STEP xx:		Update Row Hash
+***********************************************************************************************/
+
+UPDATE			snpBudgetAverageMonthly
+INNER JOIN	(
+							SELECT 			snpBudgetAverageMonthly.KeyID 	AS KeyID
+													,MD5(CONCAT(
+														snpBudgetAverageMonthly.BudgetAverageMonthlyID 					
+														,snpBudgetAverageMonthly.IncomeActual 								
+														,snpBudgetAverageMonthly.IncomeAverage 								
+														,snpBudgetAverageMonthly.ExpenseActual 								
+														,snpBudgetAverageMonthly.ExpenseAverage 							
+														,snpBudgetAverageMonthly.TotalIncomeVsExpenseActual 		
+														,snpBudgetAverageMonthly.TotalIncomeVsExpenseAverage	
+                                                    ))	AS SnapshotHash 
+							FROM 			snpBudgetAverageMonthly snpBudgetAverageMonthly	
+                            INNER JOIN	tmpParameter tmpParameter
+                            ON					tmpParameter.BudgetAverageMonthlyID = snpBudgetAverageMonthly.BudgetAverageMonthlyID
+						) RS
+SET					snpBudgetAverageMonthly.SnapshotHash = RS.SnapshotHash
+WHERE 			snpBudgetAverageMonthly.KeyID = RS.KeyID
+; 
 
 
 
