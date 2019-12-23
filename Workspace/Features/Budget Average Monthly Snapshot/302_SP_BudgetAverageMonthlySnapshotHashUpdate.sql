@@ -5,12 +5,12 @@ USE `planner`;
 DROP PROCEDURE IF EXISTS `BudgetAverageMonthlySnapshotHashUpdate`;
 
 DELIMITER ;;
-CREATE PROCEDURE `BudgetAverageMonthlySnapshotHashUpdate`(prmStartDT DATETIME, prmEndDT DATETIME)
+CREATE PROCEDURE `BudgetAverageMonthlySnapshotHashUpdate`()
 BEGIN
 
 
 /********************************************************************************************** 
-PURPOSE:		Update Budget Average Monthly Snapshot Hashes
+PURPOSE:		Update Budget Average Monthly Snapshot Hash
 AUTHOR:			Rob Azinger
 DATE:			12/22/2019
 NOTES:			Snapshot Table - snpBudgetAverageMonthly
