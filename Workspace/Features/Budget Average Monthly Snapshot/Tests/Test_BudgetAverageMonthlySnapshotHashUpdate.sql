@@ -36,8 +36,8 @@ CALL BudgetAverageMonthlySnapshotGenerate(
 
 
 -- Step 2
-update snpBudgetAverageMonthly set IncomeActual = 1234 where BudgetAverageMonthlyID = '201904201906';
-update snpBudgetAverageMonthly set IncomeAverage = 5678 where BudgetAverageMonthlyID = '201904201907';
+update snpBudgetAverageMonthly set IncomeActual = 2222 where BudgetAverageMonthlyID = '201904201906';
+update snpBudgetAverageMonthly set IncomeAverage = 3333 where BudgetAverageMonthlyID = '201904201907';
 
 
 CALL BudgetAverageMonthlySnapshotHashUpdate(
