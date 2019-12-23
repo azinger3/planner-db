@@ -297,6 +297,7 @@ SET			snpBudgetAverageMonthly.IncomeActual = RS.IncomeActual
             ,snpBudgetAverageMonthly.TotalIncomeVsExpenseActual = RS.TotalIncomeVsExpenseActual
             ,snpBudgetAverageMonthly.TotalIncomeVsExpenseAverage = RS.TotalIncomeVsExpenseAverage 
             ,snpBudgetAverageMonthly.SnapshotHash = RS.SnapshotHash
+            ,snpBudgetAverageMonthly.SnapshotDT = RS.SnapshotDT
             ,snpBudgetAverageMonthly.ModifyDT = RS.ModifyDT   
 			,snpBudgetAverageMonthly.ModifyBy = RS.ModifyBy   
 ;
