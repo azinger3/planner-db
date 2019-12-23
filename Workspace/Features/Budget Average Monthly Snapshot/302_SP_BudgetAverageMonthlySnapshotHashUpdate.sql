@@ -32,6 +32,8 @@ INNER JOIN	(
 				FROM 	snpBudgetAverageMonthly snpBudgetAverageMonthly	
 			) RS
 SET			snpBudgetAverageMonthly.SnapshotHash = RS.SnapshotHash
+			,snpBudgetAverageMonthly.ModifyDT = NOW()
+			,snpBudgetAverageMonthly.ModifyBy = 'Hash Update'
 WHERE 		snpBudgetAverageMonthly.KeyID = RS.KeyID
 ; 
 
