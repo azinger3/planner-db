@@ -281,6 +281,7 @@ INNER JOIN	(
 						,IFNULL(tmpBudgetAverage.TotalIncomeVsExpenseActual, 0) 	AS TotalIncomeVsExpenseActual
 						,IFNULL(tmpBudgetAverage.TotalIncomeVsExpenseAverage, 0)	AS TotalIncomeVsExpenseAverage
 						,@varSnapshotHash 											AS SnapshotHash
+						,CONVERT_TZ(NOW(), '+00:00','-00:00')						AS SnapshotDT
 						,CONVERT_TZ(NOW(), '+00:00','-00:00')						AS ModifyDT
 						,'Snapshot Update' 											AS ModifyBy
 				FROM 	tmpBudgetAverage tmpBudgetAverage
