@@ -1,5 +1,6 @@
 USE `planner`;
 
+-- Step 1
 truncate table snpBudgetAverageMonthly;
 
 
@@ -34,6 +35,7 @@ CALL BudgetAverageMonthlySnapshotGenerate(
 );
 
 
+-- Step 2
 update snpBudgetAverageMonthly set IncomeActual = 1234 where BudgetAverageMonthlyID = '201904201906';
 update snpBudgetAverageMonthly set IncomeAverage = 5678 where BudgetAverageMonthlyID = '201904201907';
 
@@ -44,6 +46,7 @@ CALL BudgetAverageMonthlySnapshotHashUpdate(
 
 
 
+-- Step 3
 CALL BudgetAverageMonthlySnapshotGenerate(
 	/* prmStartDT */ 	'2019-04-01'
 	,/* prmEndDT */ 	'2019-05-01' 
@@ -75,4 +78,6 @@ CALL BudgetAverageMonthlySnapshotGenerate(
 );
 
 
+
+-- Verify
 select * from snpBudgetAverageMonthly;
