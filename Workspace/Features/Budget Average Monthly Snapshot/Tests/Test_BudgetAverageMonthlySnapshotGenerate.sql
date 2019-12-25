@@ -34,5 +34,5 @@ CALL BudgetAverageMonthlySnapshotGenerate(
 );
 
 
-
+-- truncate table snpBudgetAverageMonthly;
 select * from snpBudgetAverageMonthly;
