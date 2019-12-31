@@ -1,5 +1,10 @@
 USE `planner`;
 
+DROP PROCEDURE IF EXISTS `BudgetAverageMonthlySnapshotGet`;
+
+DELIMITER ;;
+CREATE PROCEDURE `BudgetAverageMonthlySnapshotGet`()
+BEGIN
 
 
 /********************************************************************************************** 
@@ -10,7 +15,6 @@ NOTES:			Snapshot Table - snpBudgetAverageMonthly
 CHANGE CONTROL:		 
 ***********************************************************************************************/
 
--- BudgetAverageMonthlySnapshotGet
 
 SELECT 	snpBudgetAverageMonthly.KeyID							AS KeyID
 		,snpBudgetAverageMonthly.BudgetAverageMonthlyID			AS BudgetAverageMonthlyID	
@@ -28,3 +32,6 @@ SELECT 	snpBudgetAverageMonthly.KeyID							AS KeyID
 		,snpBudgetAverageMonthly.ModifyBy						AS ModifyBy
 		,snpBudgetAverageMonthly.ActiveFlg						AS ActiveFlg
 FROM 	snpBudgetAverageMonthly snpBudgetAverageMonthly;
+
+END;;
+DELIMITER ;
