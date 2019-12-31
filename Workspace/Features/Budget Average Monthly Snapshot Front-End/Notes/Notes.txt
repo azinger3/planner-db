@@ -1,3 +1,3 @@
-301_SP_BudgetAverageMonthlySnapshotGet.sql
++++++++++++++++++++DONE++++++++++++++++++++301_SP_BudgetAverageMonthlySnapshotGet.sql
 GET /budget/average/snapshot
 chart.js line chart (similar) graph on home page
