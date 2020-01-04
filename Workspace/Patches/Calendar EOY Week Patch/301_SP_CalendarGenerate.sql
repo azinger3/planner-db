@@ -3,16 +3,12 @@ USE `planner`;
 DROP PROCEDURE IF EXISTS `CalendarGenerate`;
 
 DELIMITER ;;
-CREATE PROCEDURE `CalendarGenerate`(StartDT DATETIME, EndDT DATETIME)
+CREATE PROCEDURE `CalendarGenerate`()
 BEGIN
-
-	DECLARE varEffectiveDT DATETIME;
-    DECLARE varMaxDT DATETIME;
-	DECLARE i INT; 
     
-	SET varEffectiveDT = '2014-03-16';
-    SET varMaxDT = '2085-09-11';
-	SET i = 1; 
+	SET @varEffectiveDT = '2014-03-16';
+    SET @varMaxDT = '2085-09-11';
+	SET @i = 1; 
     
     
     
@@ -20,10 +16,10 @@ BEGIN
 
 
 
-	WHILE i = 1 DO
+	WHILE @i = 1 DO
     
-		IF varEffectiveDT > varMaxDT THEN 
-			SET i = 0;
+		IF @varEffectiveDT > @varMaxDT THEN 
+			SET @i = 0;
 		END IF;
 		
         
@@ -37,17 +33,17 @@ BEGIN
 			,DayNumber  	
             ,QuarterNumber
 		)
-		SELECT	DATE_FORMAT(varEffectiveDT ,'%Y-%m-%d')		AS EffectiveDT 		
-				,YEAR(varEffectiveDT) 						AS YearNumber 		
-				,MONTH(varEffectiveDT) 						AS MonthNumber  	
-				,WEEK(varEffectiveDT) 						AS WeekNumber  	
-                ,WEEKDAY(varEffectiveDT)					AS WeekDayNumber
-                ,DAY(varEffectiveDT) 						AS DayNumber
-                ,QUARTER(varEffectiveDT)					AS QuarterNumber
+		SELECT	DATE_FORMAT(@varEffectiveDT ,'%Y-%m-%d')	AS EffectiveDT 		
+				,YEAR(@varEffectiveDT) 						AS YearNumber 		
+				,MONTH(@varEffectiveDT) 					AS MonthNumber  	
+				,(WEEK(@varEffectiveDT) + 1) 				AS WeekNumber  	
+                ,WEEKDAY(@varEffectiveDT)					AS WeekDayNumber
+                ,DAY(@varEffectiveDT) 						AS DayNumber
+                ,QUARTER(@varEffectiveDT)					AS QuarterNumber
 		;
 		
         
-		SET varEffectiveDT = DATE_ADD(varEffectiveDT, INTERVAL 1 DAY);
+		SET @varEffectiveDT = DATE_ADD(@varEffectiveDT, INTERVAL 1 DAY);
         
 	END WHILE;
     
@@ -84,8 +80,22 @@ BEGIN
 							END
             ,QuarterID		= CONCAT(YearNumber, LPAD(QuarterNumber, 2, '0' ))
 	;
+    
+    
+    
+    UPDATE Calendar
+    SET		WeekNumber = 1
+    WHERE	WeekNumber = 53
+    ;
+    
+    
+    
+	UPDATE Calendar
+    SET		WeekID = CONCAT((YearNumber + 1), LPAD(WeekNumber, 2, '0' ))
+    WHERE	WeekID = CONCAT(YearNumber, '53')
+    ;
+        
+    
 
 END;;
 DELIMITER ;
-
-	

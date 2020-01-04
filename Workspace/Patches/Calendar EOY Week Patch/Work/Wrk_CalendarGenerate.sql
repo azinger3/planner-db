@@ -33,10 +33,10 @@ BEGIN
 			,DayNumber  	
             ,QuarterNumber
 		)
-		SELECT	DATE_FORMAT(@varEffectiveDT ,'%Y-%m-%d')		AS EffectiveDT 		
+		SELECT	DATE_FORMAT(@varEffectiveDT ,'%Y-%m-%d')	AS EffectiveDT 		
 				,YEAR(@varEffectiveDT) 						AS YearNumber 		
-				,MONTH(@varEffectiveDT) 						AS MonthNumber  	
-				,(WEEK(@varEffectiveDT) + 1) 						AS WeekNumber  	
+				,MONTH(@varEffectiveDT) 					AS MonthNumber  	
+				,(WEEK(@varEffectiveDT) + 1) 				AS WeekNumber  	
                 ,WEEKDAY(@varEffectiveDT)					AS WeekDayNumber
                 ,DAY(@varEffectiveDT) 						AS DayNumber
                 ,QUARTER(@varEffectiveDT)					AS QuarterNumber
@@ -84,14 +84,14 @@ BEGIN
     
     
     UPDATE Calendar
-    SET			WeekNumber = 1
+    SET		WeekNumber = 1
     WHERE	WeekNumber = 53
     ;
     
     
     
 	UPDATE Calendar
-    SET			WeekID = CONCAT((YearNumber + 1), LPAD(WeekNumber, 2, '0' ))
+    SET		WeekID = CONCAT((YearNumber + 1), LPAD(WeekNumber, 2, '0' ))
     WHERE	WeekID = CONCAT(YearNumber, '53')
     ;
         
@@ -106,6 +106,7 @@ CALL CalendarGenerate();
 
 
 select * from Calendar where EffectiveDT between '2018-12-20' and '2020-01-20' order by CalendarID;
+
 -- select * from Calendar where WeekNumber = 0;
 
 -- select *, concat((YearNumber - 1), '52') AS newWeekID from Calendar where WeekID = concat(YearNumber, '00');
