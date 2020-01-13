@@ -1,0 +1,3 @@
+USE `planner`;
+
+CALL BudgetAverageMonthlySnapshotGet();
