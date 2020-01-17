@@ -1,2 +1,13 @@
 TODO:
 budget average monthly snapshot generate
+
+Alerts
+-------
+BudgetAverageMonthlySnapshotRefreshActionSuccess
+SNAPSHOT-OK
+
+BudgetAverageMonthlySnapshotRefreshActionError
+SNAPSHOT-ERR
+
+BudgetAverageMonthlySnapshotRefreshRuleSuccess
+BudgetAverageMonthlySnapshotRefreshRuleError
