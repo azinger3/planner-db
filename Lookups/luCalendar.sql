@@ -1,1 +1,8 @@
-select * from planner.Calendar where EffectiveDT = '2020-03-07';
+-- euse planner;
+
+
+select
+  *
+from Calendar
+where
+  EffectiveDT = '2020-03-07';
