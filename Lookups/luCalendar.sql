@@ -1,0 +1,1 @@
+select * from planner.Calendar where EffectiveDT = '2020-03-07';
