@@ -2,7 +2,6 @@ USE `planner`;
 
 DROP PROCEDURE IF EXISTS `TransactionQueueInsert`;
 
--- DELIMITER ;;
 CREATE PROCEDURE `TransactionQueueInsert`
 (
     prmKeyID				VARCHAR(100)
@@ -27,6 +26,10 @@ CHANGE CONTROL:
 ***********************************************************************************************/
 
 
+/**********************************************************************************************
+	STEP 01:		Initialize variables to store parameter & scope data
+***********************************************************************************************/
+
 SET @varKeyID = prmKeyID;
 SET @varTransactionTypeID = prmTransactionTypeID;
 SET @varTransactionNumber = prmTransactionNumber;
@@ -39,12 +42,22 @@ SET @varNote = prmNote;
 SET @varCreateBy = prmCreateBy;
 
 
+
+/**********************************************************************************************
+	STEP 02:		Validate Transaction
+***********************************************************************************************/
+
 SET @varIsQueued = 0;
 SET @varIsProcessed = 0;
 
 SET @varIsQueued = (IFNULL((SELECT '1' FROM TransactionQueue WHERE KeyID = @varKeyID LIMIT 1), 0));
 SET @varIsProcessed = (IFNULL((SELECT '1' FROM logTransactionQueue WHERE KeyID = @varKeyID LIMIT 1), 0));
 
+
+
+/**********************************************************************************************
+	STEP 02:		Insert Transaction
+***********************************************************************************************/
 
 INSERT INTO TransactionQueue
 (
@@ -75,9 +88,3 @@ AND     @varIsProcessed = 0
 
 
 END;
--- DELIMITER ;
-
-
-
-
-

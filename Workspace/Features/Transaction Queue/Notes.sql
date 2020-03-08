@@ -14,7 +14,7 @@ select @varIsExisting as testthis;
 
 
 CALL TransactionQueueInsert(
-    'new3'
+    'new5'
     ,2
     ,null		    
     ,'2020-03-07'		
@@ -38,6 +38,8 @@ CALL TransactionQueueInsert(
     ,'CC'	
     ,'Bot'
 );
+
+CALL TransactionQueueProcess();
 
 select * from TransactionQueue;
 select * from logTransactionQueue;
