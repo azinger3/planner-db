@@ -49,4 +49,7 @@ select * from logTransactionQueue;
 TransactionQueueInsert -- called in mass EXEC statement - scheduled every 1 minute - 9:00 PM
 TransactionQueueProcess -- move from transaction queue to core, then log - scheduled 1 minute - 9:01PM
 
+truncate table TransactionQueue;
+truncate table logTransactionQueue;
+
 */
