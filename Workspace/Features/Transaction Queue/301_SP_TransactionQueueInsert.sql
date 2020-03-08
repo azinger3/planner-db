@@ -37,11 +37,13 @@ SET @varAmount = prmAmount;
 SET @varDescription = prmDescription;
 SET @varNote = prmNote;
 SET @varCreateBy = prmCreateBy;
-SET @varIsExisting = 0;
 
 
-SET @varIsExisting = ISNULL((SELECT 1 FROM TransactionQueue WHERE KeyID = @varKeyID)), 0;
-SET @varIsExisting = (SELECT 1 FROM logTransactionQueue WHERE KeyID = @varKeyID);
+SET @varIsQueued = 0;
+SET @varIsProcessed = 0;
+
+SET @varIsQueued = (IFNULL((SELECT '1' FROM TransactionQueue WHERE KeyID = @varKeyID LIMIT 1), 0));
+SET @varIsProcessed = (IFNULL((SELECT '1' FROM logTransactionQueue WHERE KeyID = @varKeyID LIMIT 1), 0));
 
 
 INSERT INTO TransactionQueue
@@ -67,7 +69,8 @@ SELECT  prmKeyID 				AS KeyID
         ,prmDescription 		AS Description 					
         ,prmNote 			 	AS Note 							
         ,prmCreateBy           	AS CreateBy 
--- WHERE   @varIsExisting = 0                      
+WHERE   @varIsQueued = 0
+AND     @varIsProcessed = 0                  
 ;
 
 
