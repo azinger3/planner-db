@@ -23,7 +23,6 @@ CALL TransactionQueueInsert(
     ,65.10		
     ,'COSTCO #6532'	
     ,'CC'	
-    ,'Bot'
 );
 
 CALL TransactionQueueInsert(
@@ -36,7 +35,6 @@ CALL TransactionQueueInsert(
     ,65.10		
     ,'COSTCO test'	
     ,'CC'	
-    ,'Bot'
 );
 
 CALL TransactionQueueProcess();

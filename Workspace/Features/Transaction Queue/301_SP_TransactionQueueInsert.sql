@@ -8,12 +8,10 @@ CREATE PROCEDURE `TransactionQueueInsert`
     ,prmTransactionTypeID	INT(10)
     ,prmTransactionNumber	VARCHAR(100)		    
     ,prmTransactionDT		DATETIME			
-    ,prmBudgetNumber 		INT(10)			
     ,prmBudgetCategoryID 	INT(10)		    
     ,prmAmount 				DECIMAL(10, 4)			
     ,prmDescription 		VARCHAR(1000)			
     ,prmNote 				VARCHAR(1000)			
-    ,prmCreateBy  			VARCHAR(100)
 )
 BEGIN
 
@@ -34,12 +32,12 @@ SET @varQueueID = prmQueueID;
 SET @varTransactionTypeID = prmTransactionTypeID;
 SET @varTransactionNumber = prmTransactionNumber;
 SET @varTransactionDT = prmTransactionDT;
-SET @varBudgetNumber = prmBudgetNumber;
 SET @varBudgetCategoryID = prmBudgetCategoryID;
 SET @varAmount = prmAmount;
 SET @varDescription = prmDescription;
 SET @varNote = prmNote;
-SET @varCreateBy = prmCreateBy;
+
+SET @varBudgetNumber = EXTRACT(YEAR_MONTH FROM @varTransactionDT);
 
 
 
@@ -76,12 +74,12 @@ SELECT  prmQueueID 				AS QueueID
         ,prmTransactionTypeID 	AS TransactionTypeID
         ,prmTransactionNumber 	AS TransactionNumber			    
         ,prmTransactionDT	 	AS TransactionDT					
-        ,prmBudgetNumber 	 	AS BudgetNumber 					
+        ,@varBudgetNumber 	 	AS BudgetNumber 					
         ,prmBudgetCategoryID  	AS BudgetCategoryID 			    
         ,prmAmount 			 	AS Amount 						
         ,prmDescription 		AS Description 					
         ,prmNote 			 	AS Note 							
-        ,prmCreateBy           	AS CreateBy 
+        ,'Bot'           	    AS CreateBy 
 WHERE   @varIsQueued = 0
 AND     @varIsProcessed = 0                  
 ;
