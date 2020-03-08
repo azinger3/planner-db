@@ -20,7 +20,7 @@ DROP TABLE IF EXISTS TransactionQueue;
 CREATE TABLE TransactionQueue
 (
 	TransactionQueueID              INT(10) NOT NULL AUTO_INCREMENT
-    ,KeyID							VARCHAR(100)
+    ,QueueID						VARCHAR(100)
     ,TransactionTypeID				INT(10)
     ,TransactionNumber			    VARCHAR(100)
     ,TransactionDT					DATETIME
@@ -37,7 +37,7 @@ CREATE TABLE TransactionQueue
 	,PRIMARY KEY (`TransactionQueueID`)
 );
 
-CREATE INDEX ixTransactionQueue001 ON TransactionQueue(KeyID);
+CREATE INDEX ixTransactionQueue001 ON TransactionQueue(QueueID);
 
 
 -- transaction queue log
@@ -47,7 +47,7 @@ CREATE TABLE logTransactionQueue
 (
 	logTransactionQueueID           INT(10) NOT NULL AUTO_INCREMENT
     ,TransactionQueueID             INT(10)
-    ,KeyID							VARCHAR(100)
+    ,QueueID						VARCHAR(100)
     ,TransactionTypeID				INT(10)
     ,TransactionNumber			    VARCHAR(100)
     ,TransactionDT					DATETIME
@@ -64,14 +64,14 @@ CREATE TABLE logTransactionQueue
 	,PRIMARY KEY (`logTransactionQueueID`)
 );
 
-CREATE INDEX ixlogTransactionQueue001 ON logTransactionQueue(KeyID);
+CREATE INDEX ixlogTransactionQueue001 ON logTransactionQueue(QueueID);
 
 
 
 -- test data
 INSERT INTO TransactionQueue
 (
-    KeyID
+    QueueID
     ,TransactionTypeID
     ,TransactionNumber			    
     ,TransactionDT					
@@ -82,23 +82,23 @@ INSERT INTO TransactionQueue
     ,Note 							
     ,CreateBy                       
 )
-SELECT  '137ti4u3brh3or83'  AS KeyID
+SELECT  'test1'             AS QueueID
         ,2                  AS TransactionTypeID
-        ,NULL               AS TransactionNumber			    
+        ,''                 AS TransactionNumber			    
         ,'2020-03-08'       AS TransactionDT					
         ,202003             AS BudgetNumber 					
         ,103                AS BudgetCategoryID 			    
         ,65.19              AS Amount 						
-        ,'COSTCO #19387'    AS Description 					
+        ,'COSTCO test1'    AS Description 					
         ,'CC'               AS Note 							
-        ,'Transaction Bot'  AS CreateBy                       
+        ,'Bot'              AS CreateBy                       
 ;
 
 
 INSERT INTO logTransactionQueue
 (
     TransactionQueueID
-    ,KeyID
+    ,QueueID
     ,TransactionTypeID
     ,TransactionNumber			    
     ,TransactionDT					
@@ -109,17 +109,17 @@ INSERT INTO logTransactionQueue
     ,Note 							
     ,CreateBy                       
 )
-SELECT  9876543             AS TransactionQueueID
-        ,'137ti4u3brh3or83' AS KeyID
+SELECT  9                   AS TransactionQueueID
+        ,'test2'            AS QueueID
         ,2                  AS TransactionTypeID
-        ,NULL               AS TransactionNumber			    
+        ,''                 AS TransactionNumber			    
         ,'2020-03-08'       AS TransactionDT					
         ,202003             AS BudgetNumber 					
         ,103                AS BudgetCategoryID 			    
         ,65.19              AS Amount 						
-        ,'COSTCO #19387'    AS Description 					
+        ,'COSTCO test2'    AS Description 					
         ,'CC'               AS Note 							
-        ,'Transaction Bot'  AS CreateBy                       
+        ,'Bot'              AS CreateBy                       
 ;
 
 

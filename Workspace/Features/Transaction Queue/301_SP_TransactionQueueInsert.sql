@@ -4,7 +4,7 @@ DROP PROCEDURE IF EXISTS `TransactionQueueInsert`;
 
 CREATE PROCEDURE `TransactionQueueInsert`
 (
-    prmKeyID				VARCHAR(100)
+    prmQueueID				VARCHAR(100)
     ,prmTransactionTypeID	INT(10)
     ,prmTransactionNumber	VARCHAR(100)		    
     ,prmTransactionDT		DATETIME			
@@ -27,10 +27,10 @@ CHANGE CONTROL:
 
 
 /**********************************************************************************************
-	STEP 01:		Initialize variables to store parameter & scope data
+	STEP 01:	Initialize variables to store parameter & scope data
 ***********************************************************************************************/
 
-SET @varKeyID = prmKeyID;
+SET @varQueueID = prmQueueID;
 SET @varTransactionTypeID = prmTransactionTypeID;
 SET @varTransactionNumber = prmTransactionNumber;
 SET @varTransactionDT = prmTransactionDT;
@@ -44,24 +44,24 @@ SET @varCreateBy = prmCreateBy;
 
 
 /**********************************************************************************************
-	STEP 02:		Validate Transaction
+	STEP 02:	Validate Transaction
 ***********************************************************************************************/
 
 SET @varIsQueued = 0;
 SET @varIsProcessed = 0;
 
-SET @varIsQueued = (IFNULL((SELECT '1' FROM TransactionQueue WHERE KeyID = @varKeyID LIMIT 1), 0));
-SET @varIsProcessed = (IFNULL((SELECT '1' FROM logTransactionQueue WHERE KeyID = @varKeyID LIMIT 1), 0));
+SET @varIsQueued = (IFNULL((SELECT '1' FROM TransactionQueue WHERE QueueID = @varQueueID LIMIT 1), 0));
+SET @varIsProcessed = (IFNULL((SELECT '1' FROM logTransactionQueue WHERE QueueID = @varQueueID LIMIT 1), 0));
 
 
 
 /**********************************************************************************************
-	STEP 02:		Insert Transaction
+	STEP 02:	Insert Transaction
 ***********************************************************************************************/
 
 INSERT INTO TransactionQueue
 (
-    KeyID
+    QueueID
     ,TransactionTypeID
     ,TransactionNumber			    
     ,TransactionDT					
@@ -72,7 +72,7 @@ INSERT INTO TransactionQueue
     ,Note 							
     ,CreateBy                       
 )
-SELECT  prmKeyID 				AS KeyID
+SELECT  prmQueueID 				AS QueueID
         ,prmTransactionTypeID 	AS TransactionTypeID
         ,prmTransactionNumber 	AS TransactionNumber			    
         ,prmTransactionDT	 	AS TransactionDT					
