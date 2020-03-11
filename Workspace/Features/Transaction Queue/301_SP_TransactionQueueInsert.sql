@@ -70,16 +70,16 @@ INSERT INTO TransactionQueue
     ,Note 							
     ,CreateBy                       
 )
-SELECT  prmQueueID 				AS QueueID
-        ,prmTransactionTypeID 	AS TransactionTypeID
-        ,prmTransactionNumber 	AS TransactionNumber			    
-        ,prmTransactionDT	 	AS TransactionDT					
-        ,@varBudgetNumber 	 	AS BudgetNumber 					
-        ,prmBudgetCategoryID  	AS BudgetCategoryID 			    
-        ,prmAmount 			 	AS Amount 						
-        ,prmDescription 		AS Description 					
-        ,prmNote 			 	AS Note 							
-        ,'Bot'           	    AS CreateBy 
+SELECT  @varQueueID 		                AS QueueID
+        ,@varTransactionTypeID 	            AS TransactionTypeID
+        ,@varTransactionNumber 	            AS TransactionNumber			    
+        ,@varTransactionDT	 	            AS TransactionDT					
+        ,@varBudgetNumber 	 	            AS BudgetNumber 					
+        ,@varBudgetCategoryID  	            AS BudgetCategoryID 			    
+        ,@varAmount 			            AS Amount 						
+        ,REPLACE(@varDescription, '''', '') AS Description 					
+        ,@varNote 			 	            AS Note 							
+        ,'Bot'           	                AS CreateBy 
 WHERE   @varIsQueued = 0
 AND     @varIsProcessed = 0                  
 ;

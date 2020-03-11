@@ -39,10 +39,17 @@ CALL TransactionQueueInsert(
 
 CALL TransactionQueueProcess();
 
-select * from Transaction order by 1 desc;
+update Transaction
+inner join (
+    select TransactionID, replace(Description, '''', '') as cleanOne from Transaction where Description like '%''%' order by 1 desc limit 50
+) rs
+on  Transaction.TransactionID = rs.TransactionID
+set Description = rs.cleanOne
+
 
 select * from TransactionQueue;
 select * from logTransactionQueue;
+
 
 /*
 
