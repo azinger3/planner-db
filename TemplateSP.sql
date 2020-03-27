@@ -2,9 +2,8 @@ USE `planner`;
 
 DROP PROCEDURE IF EXISTS `SPName`;
 
-DELIMITER ;;
 CREATE PROCEDURE `SPName`(StartDT DATETIME, EndDT DATETIME)
 BEGIN
 	-- put magic here
-END;;
-DELIMITER ;
+  select 'test' as testme;
+END;
