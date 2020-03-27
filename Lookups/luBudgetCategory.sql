@@ -1,12 +1,12 @@
-select * from BudgetCategory;
-select * from BudgetItem where BudgetCategoryID in (99,97,81,82,65,66,67);
-select * from TransactionType;
+select * from BudgetCategory where BudgetCategoryID in (78,79);
+select * from BudgetItem where BudgetCategoryID in (76);
+-- select * from TransactionType;
 
 /*
 update BudgetCategory
-set FundID = null
-where BudgetCategoryID = 109;
+set BudgetCategory = 'Pets'
+where BudgetCategoryID = 88;
 
 delete from BudgetCategory
-where BudgetCategoryID in (75);
+where BudgetCategoryID in (76,79);
 */
