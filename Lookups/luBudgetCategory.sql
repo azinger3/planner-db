@@ -16,12 +16,11 @@ where FundID = 15;
 delete from BudgetCategory
 where BudgetCategoryID in (76,79);
 
-update BudgetCategory set ColorHighlight = '#7fbfff' where BudgetCategoryID = 49;
-update BudgetCategory set ColorHighlight = '#ff7fbf' where BudgetCategoryID = 48;
-update BudgetCategory set ColorHighlight = '#bfff7f' where BudgetCategoryID = 47;
-update BudgetCategory set ColorHighlight = '#7fffbf' where BudgetCategoryID = 72;
-update BudgetCategory set ColorHighlight = '#bf7fff' where BudgetCategoryID = 55;
-update BudgetCategory set ColorHighlight = '#ffbf7f' where BudgetCategoryID = 54;
+update BudgetCategory set ColorHighlight = '#c39797' where BudgetCategoryID = 15;
+update BudgetCategory set ColorHighlight = '#008080' where BudgetCategoryID = 50;
+update BudgetCategory set ColorHighlight = '#5bc0de' where BudgetCategoryID = 25;
+
+
 update BudgetCategory set ColorHighlight = '#011037' where BudgetCategoryID = 56;
 update BudgetCategory set ColorHighlight = '#1b1e23' where BudgetCategoryID = 58;
 update BudgetCategory set ColorHighlight = '#ffebdd' where BudgetCategoryID = 59;
