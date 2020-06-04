@@ -24,6 +24,8 @@ SELECT		Standup.StandupID
 				,StandupItem.Subject
 				,StandupItem.ActionItem
 				,CONCAT('- ', StandupItem.Subject, ' ---> ', StandupItem.ActionItem, '...') AS SubjectActionItem
+				,StandupItem.PriorityID
+				,CASE StandupItem.PriorityID WHEN 1 THEN 'Today' WHEN 2 THEN 'Yesterday' ELSE 0 END AS Priority
 				,StandupItem.CreateDT
 				,StandupItem.CreateBy
 				,StandupItem.ModifyDT
