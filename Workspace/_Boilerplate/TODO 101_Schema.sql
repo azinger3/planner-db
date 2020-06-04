@@ -1,43 +1,129 @@
 USE planner;
 
 
-DROP TABLE IF EXISTS tmpTransactionSpotlight;
+-- clean up
+DROP TABLE IF EXISTS TransactionChaseBankAccount;
+DROP TABLE IF EXISTS TransactionChaseCreditCard;
+DROP TABLE IF EXISTS Upload;
+DROP TABLE IF EXISTS UploadStatus;
+DROP TABLE IF EXISTS UploadTransaction;
+DROP TABLE IF EXISTS TransactionStage;
+DROP TABLE IF EXISTS ApplicationUser;
+DROP TABLE IF EXISTS ApplicationLog;
+DROP TABLE IF EXISTS Application;
 
-CREATE TABLE tmpTransactionSpotlight
+
+
+-- transaction queue
+DROP TABLE IF EXISTS TransactionQueue;
+
+CREATE TABLE TransactionQueue
 (
-	KeyID                   				INT(10) NOT NULL AUTO_INCREMENT
-    ,SessionID							VARCHAR(100)
-	,TransactionID           			INT(10)
+	TransactionQueueID              INT(10) NOT NULL AUTO_INCREMENT
+    ,QueueID						VARCHAR(100)
     ,TransactionTypeID				INT(10)
-    ,TransactionNumber			VARCHAR(100)
+    ,TransactionNumber			    VARCHAR(100)
     ,TransactionDT					DATETIME
-    ,TransactionYear					INT(10)
-    ,TransactionMonth 				INT(10)
-    ,TransactionWeek 				INT(10)
-    ,TransactionDay 					INT(10)
-    ,CalendarWeekID				INT(10)
-    ,CalendarWeekBegin			DATETIME
-	,CalendarWeekEnd				DATETIME
-    ,CalendarDayName			VARCHAR(100)
     ,BudgetNumber 					INT(10)
-    ,BudgetCategoryID 			INT(10)
-    ,Amount 								DECIMAL(10, 4)
-    ,Description 						VARCHAR(1000)
-    ,Note 									VARCHAR(1000)
-	,AmountYearly 					DECIMAL(10, 0)
-    ,AmountMonthly 					DECIMAL(10, 0)
-    ,AmountWeekly 					DECIMAL(10, 0)
-    ,AmountDaily						DECIMAL(10, 0)
-    ,DateRangeWeekBegin		VARCHAR(100)
-    ,DateRangeWeekEnd			VARCHAR(100)
-    ,DateRangeDaily					VARCHAR(100)
-    ,TransactionCountYearly		INT(10)
-	,TransactionCountMonthly	INT(10)
-	,TransactionCountWeekly	INT(10)
-	,TransactionCountDaily		INT(10)
-	,PRIMARY KEY (`KeyID`)
+    ,BudgetCategoryID 			    INT(10)
+    ,Amount 						DECIMAL(10, 4)
+    ,Description 					VARCHAR(1000)
+    ,Note 							VARCHAR(1000)
+	,CreateDT                       DATETIME DEFAULT(NOW())
+    ,CreateBy                       VARCHAR(100)
+    ,ModifyDT                       DATETIME
+    ,ModifyBy                       VARCHAR(100)
+	,ActiveFlg		                INT(10) DEFAULT '1'
+	,PRIMARY KEY (`TransactionQueueID`)
 );
 
+CREATE INDEX ixTransactionQueue001 ON TransactionQueue(QueueID);
 
 
-select * from tmpTransactionSpotlight;
+-- transaction queue log
+DROP TABLE IF EXISTS logTransactionQueue;
+
+CREATE TABLE logTransactionQueue
+(
+	logTransactionQueueID           INT(10) NOT NULL AUTO_INCREMENT
+    ,TransactionQueueID             INT(10)
+    ,QueueID						VARCHAR(100)
+    ,TransactionTypeID				INT(10)
+    ,TransactionNumber			    VARCHAR(100)
+    ,TransactionDT					DATETIME
+    ,BudgetNumber 					INT(10)
+    ,BudgetCategoryID 			    INT(10)
+    ,Amount 						DECIMAL(10, 4)
+    ,Description 					VARCHAR(1000)
+    ,Note 							VARCHAR(1000)
+	,CreateDT                       DATETIME DEFAULT(NOW())
+    ,CreateBy                       VARCHAR(100)
+    ,ModifyDT                       DATETIME
+    ,ModifyBy                       VARCHAR(100)
+	,ActiveFlg		                INT(10) DEFAULT '1'
+	,PRIMARY KEY (`logTransactionQueueID`)
+);
+
+CREATE INDEX ixlogTransactionQueue001 ON logTransactionQueue(QueueID);
+
+
+
+-- test data
+INSERT INTO TransactionQueue
+(
+    QueueID
+    ,TransactionTypeID
+    ,TransactionNumber			    
+    ,TransactionDT					
+    ,BudgetNumber 					
+    ,BudgetCategoryID 			    
+    ,Amount 						
+    ,Description 					
+    ,Note 							
+    ,CreateBy                       
+)
+SELECT  'test1'             AS QueueID
+        ,2                  AS TransactionTypeID
+        ,''                 AS TransactionNumber			    
+        ,'2020-03-08'       AS TransactionDT					
+        ,202003             AS BudgetNumber 					
+        ,103                AS BudgetCategoryID 			    
+        ,65.19              AS Amount 						
+        ,'COSTCO test1'    AS Description 					
+        ,'CC'               AS Note 							
+        ,'Bot'              AS CreateBy                       
+;
+
+
+INSERT INTO logTransactionQueue
+(
+    TransactionQueueID
+    ,QueueID
+    ,TransactionTypeID
+    ,TransactionNumber			    
+    ,TransactionDT					
+    ,BudgetNumber 					
+    ,BudgetCategoryID 			    
+    ,Amount 						
+    ,Description 					
+    ,Note 							
+    ,CreateBy                       
+)
+SELECT  9                   AS TransactionQueueID
+        ,'test2'            AS QueueID
+        ,2                  AS TransactionTypeID
+        ,''                 AS TransactionNumber			    
+        ,'2020-03-08'       AS TransactionDT					
+        ,202003             AS BudgetNumber 					
+        ,103                AS BudgetCategoryID 			    
+        ,65.19              AS Amount 						
+        ,'COSTCO test2'    AS Description 					
+        ,'CC'               AS Note 							
+        ,'Bot'              AS CreateBy                       
+;
+
+
+
+select * from TransactionQueue;
+select * from logTransactionQueue;
+
