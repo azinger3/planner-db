@@ -23,6 +23,7 @@ SELECT		Standup.StandupID
 				,StandupItem.StandupItemID
 				,StandupItem.Subject
 				,StandupItem.ActionItem
+				,CONCAT('- ', StandupItem.Subject, ' ---> ', StandupItem.ActionItem, '...') AS SubjectActionItem
 				,StandupItem.CreateDT
 				,StandupItem.CreateBy
 				,StandupItem.ModifyDT

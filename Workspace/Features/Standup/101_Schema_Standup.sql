@@ -20,6 +20,7 @@ CREATE TABLE Standup
 CREATE INDEX ixStandup001 ON Standup(EffectiveDT);
 
 
+
 -- stand up item
 DROP TABLE IF EXISTS StandupItem;
 
