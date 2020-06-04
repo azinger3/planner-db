@@ -1,10 +1,10 @@
 USE `planner`;
 
 
-DROP PROCEDURE IF EXISTS `StandupGet`;
+DROP PROCEDURE IF EXISTS `StandupDetailGet`;
 
 DELIMITER ;;
-CREATE PROCEDURE `StandupGet`()
+CREATE PROCEDURE `StandupDetailGet`(prmEffectiveDT DATETIME)
 BEGIN
 
 
@@ -34,8 +34,7 @@ SELECT		Standup.StandupID
 FROM 			Standup Standup
 INNER JOIN	StandupItem StandupItem 
 ON				StandupItem.StandupID = Standup.StandupID
-ORDER BY Standup.EffectiveDT 		DESC
-					,StandupItem.PriorityID 	DESC
+WHERE 		Standup.EffectiveDT = prmEffectiveDT
 ;
 
 

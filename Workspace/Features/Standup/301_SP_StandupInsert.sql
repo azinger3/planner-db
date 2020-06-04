@@ -11,7 +11,7 @@ BEGIN
 /********************************************************************************************** 
 PURPOSE:		Insert a Standup
 AUTHOR:		Rob Azinger
-DATE:			06/04/2019
+DATE:				06/04/2020
 NOTES:		
 CHANGE CONTROL:		 
 ***********************************************************************************************/
@@ -75,6 +75,7 @@ SELECT	@StandupID					AS StandupID
 FROM		StandupItem StandupItem
 WHERE		StandupID = @varYesterdayStandupID
 AND		@varHasExistingFlg = 0
+AND		PriorityID = 1 -- Yesterday's Today Item
 ;
 
 
