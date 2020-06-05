@@ -7,6 +7,7 @@ CREATE TABLE snpBudgetAverageMonthly
 (
 	KeyID							INT(10) NOT NULL AUTO_INCREMENT
 	,BudgetAverageMonthlyID 				VARCHAR(20)
+    ,BudgetMonth								DATETIME
 	,IncomeActual 								DECIMAL(10, 2)
 	,IncomeAverage 								DECIMAL(10, 2)
 	,ExpenseActual 								DECIMAL(10, 2)
