@@ -60,10 +60,17 @@ INSERT INTO TransactionSms
 	,Body
     ,CreateBy
 )
-SELECT  '15029302955'        			AS Sender						
-        ,'tes test test
-        test'	AS Body,
-        'Bot' AS CreateBy
+SELECT  '15029302955' AS Sender						
+        ,'Walmart, 90.88
+        Needs, 23.32
+        Shoes for Vi, 33.93
+        Groceries, 33.63'	AS Body
+        ,'Bot' AS CreateBy
+UNION
+SELECT  '15025724735' AS Sender						
+        ,'walmart 
+        test'	AS Body
+        ,'Bot' AS CreateBy
 ;
 
 

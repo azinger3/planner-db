@@ -1,6 +1,31 @@
 USE planner;
 
--- pull messages from TransactionSms
+
+-- pull messages
+DROP TEMPORARY TABLE IF EXISTS tmpTransactionSms;
+
+CREATE TEMPORARY TABLE tmpTransactionSms
+(
+	KeyID						INT(10) NOT NULL AUTO_INCREMENT
+	,TransactionSmsID	INT(10)
+	,Sender					VARCHAR(100)
+	,Body						VARCHAR(100)
+	,PRIMARY KEY (`KeyID`)
+);
+
+INSERT INTO tmpTransactionSms
+(
+	TransactionSmsID
+	,Sender
+	,Body
+)
+SELECT	TransactionSms.TransactionSmsID	AS TransactionSmsID
+				,TransactionSms.Sender 					AS Sender
+                ,TransactionSms.Body 						AS Body
+FROM 	TransactionSms TransactionSms
+;
+
+select * from tmpTransactionSms;
 
 -- parse by the delimiter into tmpTransactionQueue
 
