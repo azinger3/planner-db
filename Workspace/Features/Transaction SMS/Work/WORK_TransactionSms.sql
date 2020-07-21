@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS TransactionSms;
 CREATE TABLE TransactionSms
 (
 	TransactionSmsID		INT(10) NOT NULL AUTO_INCREMENT
-	,Sender						VARCHAR(1000)
+	,Sender						VARCHAR(100)
     ,Body							VARCHAR(1000)
 	,CreateDT      				DATETIME DEFAULT(NOW())
 	,CreateBy      				VARCHAR(100)
@@ -40,7 +40,7 @@ CREATE TABLE logTransactionSms
 (
 	logTransactionSmsID	INT(10) NOT NULL AUTO_INCREMENT
     ,TransactionSmsID		INT(10)
-	,Sender						VARCHAR(1000)
+	,Sender						VARCHAR(100)
     ,Body							VARCHAR(1000)
 	,CreateDT      				DATETIME DEFAULT(NOW())
 	,CreateBy      				VARCHAR(100)
