@@ -1,33 +1,28 @@
-USE planner;
+USE `planner`;
 
--- prmSender VARCHAR(1000);
--- prmBody VARCHAR(1000);
+DROP PROCEDURE IF EXISTS `TransactionSmsInsert`;
 
+DELIMITER ;;
+CREATE PROCEDURE `TransactionSmsInsert` 
+(
+	prmSender VARCHAR(100)
+	,prmBody VARCHAR(1000)
+)
+BEGIN
 
-SET @prmSender = '15025724735';
-SET @prmBody = 'bubble butt bubble butt';
-
-SET @varSender = @prmSender;
-SET @varBody = @prmBody;
-
-SELECT @varSender as Sender
-				,@varBody as Body
-;
-
+SET @varSender = prmSender;
+SET @varBody = prmBody;
 
 INSERT INTO TransactionSms
 (
 	Sender					
 	,Body
-    ,CreateBy
+	,CreateBy
 )
 SELECT  @varSender	AS Sender						
 				,@varBody		AS Body
 				,'Bot'				AS CreateBy
 ;
 
-
-/*
-select * from TransactionSms order by 1 desc limit 5;
-select * from logTransactionSms order by 1 desc limit 5;
-*/
+END;;
+DELIMITER ;
