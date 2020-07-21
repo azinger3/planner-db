@@ -25,7 +25,13 @@ SELECT	TransactionSms.TransactionSmsID	AS TransactionSmsID
 FROM 	TransactionSms TransactionSms
 ;
 
-select * from tmpTransactionSms;
+SELECT 	* 
+FROM 	tmpTransactionSms;
+
+
+SELECT 	LOCATE(Body, CHAR(13))
+FROM 	tmpTransactionSms;
+
 
 -- parse by the delimiter into tmpTransactionQueue
 
