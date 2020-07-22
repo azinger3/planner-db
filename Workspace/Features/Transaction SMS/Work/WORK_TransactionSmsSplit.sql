@@ -35,17 +35,17 @@ SET varDelimiter = prmDelimiter;
 SET varStringLength = LENGTH(varString);
 
 
-DROP TEMPORARY TABLE IF EXISTS tmpSplit;
+DROP TEMPORARY TABLE IF EXISTS tmpTransactionSmsSplit;
 
-CREATE TEMPORARY TABLE tmpSplit
+CREATE TEMPORARY TABLE tmpTransactionSmsSplit
 (
-	KeyID 							INT(10) NOT NULL AUTO_INCREMENT
+	KeyID 							INT NOT NULL AUTO_INCREMENT
 	,varString						VARCHAR(100)
-	,varStringLength			INT(10)
+	,varStringLength			INT
 	,varSegment				VARCHAR(100)
-	,varSegmentLength		INT(10)
-	,varStartID					INT(10)
-	,varEndID					INT(10)
+	,varSegmentLength		INT
+	,varStartID					INT
+	,varEndID					INT
 	,PRIMARY KEY (`KeyID`)
 ); 
 
@@ -70,7 +70,7 @@ WHILE i = 0 DO
 	SET varSegment = SUBSTRING(varString, varStartID, varSegmentLength);
 	
 
-	INSERT INTO tmpSplit
+	INSERT INTO tmpTransactionSmsSplit
 	(
 		varString
 		,varStringLength
@@ -91,16 +91,6 @@ WHILE i = 0 DO
 	SET varStartID = varEndID + 1;
 	
 END WHILE;
-
-
-SELECT	tmpSplit.KeyID						AS KeyID
-				,tmpSplit.varString					AS prmString
-				,tmpSplit.varStringLength		AS StringLength
-				,tmpSplit.varSegment				AS Segment
-				,tmpSplit.varSegmentLength	AS SegmentLength
-				,tmpSplit.varStartID					AS StartID
-				,tmpSplit.varEndID					AS EndID
-FROM		tmpSplit tmpSplit;
 
 END;;
 DELIMITER ;
