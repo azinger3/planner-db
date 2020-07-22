@@ -1,6 +1,9 @@
 USE planner;
 
 
+-- SET i INT DEFAULT(0);
+
+
 -- pull messages
 DROP TEMPORARY TABLE IF EXISTS tmpTransactionSms;
 
@@ -8,7 +11,6 @@ CREATE TEMPORARY TABLE tmpTransactionSms
 (
 	KeyID						INT(10) NOT NULL AUTO_INCREMENT
 	,TransactionSmsID	INT(10)
-	,Sender					VARCHAR(100)
 	,Body						VARCHAR(100)
 	,PRIMARY KEY (`KeyID`)
 );
@@ -16,24 +18,33 @@ CREATE TEMPORARY TABLE tmpTransactionSms
 INSERT INTO tmpTransactionSms
 (
 	TransactionSmsID
-	,Sender
 	,Body
 )
 SELECT	TransactionSms.TransactionSmsID	AS TransactionSmsID
-				,TransactionSms.Sender 					AS Sender
                 ,TransactionSms.Body 						AS Body
 FROM 	TransactionSms TransactionSms
 ;
+
 
 SELECT 	* 
 FROM 	tmpTransactionSms;
 
 
-SELECT 	LOCATE(Body, CHAR(13))
-FROM 	tmpTransactionSms;
+
+
+
+
 
 
 -- parse by the delimiter into tmpTransactionQueue
+
+CALL TransactionSmsSplit('boy
+girl
+tranny
+shim', CHAR(10));
+
+
+CALL TransactionSmsSplit('Target, 30.30', ',');
 
 -- if can't parse, dump single line
 
