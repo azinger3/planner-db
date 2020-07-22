@@ -7,6 +7,7 @@ CREATE PROCEDURE `TransactionSmsProcess`()
 BEGIN
 
 DECLARE varTransactionSmsID INT;
+DECLARE varHasTransaction INT DEFAULT 0;
 DECLARE varTransactionSmsCount INT;
 DECLARE varSmsSid VARCHAR(1000);
 DECLARE varBody VARCHAR(1000);
@@ -54,174 +55,174 @@ CREATE TEMPORARY TABLE tmpTransactionQueue
 );
 
 
-WHILE i = 0 DO
-	
-    SELECT 	tmpTransactionSms.TransactionSmsID	AS varTransactionSmsID
-					,tmpTransactionSms.Body 						AS varBody
-    FROM 	tmpTransactionSms tmpTransactionSms
-    WHERE	tmpTransactionSms.IsProcessFlg = 0
-	LIMIT 		1
-    INTO		varTransactionSmsID
-					,varBody
-    ;
-    
-    
-    UPDATE 	tmpTransactionSms
-    SET			tmpTransactionSms.IsProcessFlg = 1
-    WHERE 	tmpTransactionSms.TransactionSmsID = varTransactionSmsID
-    ;
-    
-    
-    SELECT 	COUNT(tmpTransactionSms.KeyID) AS varTransactionSmsCount
-    FROM 	tmpTransactionSms tmpTransactionSms
-    WHERE	tmpTransactionSms.IsProcessFlg = 0
-    INTO		varTransactionSmsCount
-    ;
-	
-    
-    CALL TransactionSmsSplit(varBody, CHAR(10));
-    
-    
-	INSERT INTO tmpTransactionQueue
-    (
-        QueueID
-        ,TransactionNumber
-        ,TransactionDT
-        ,Amount
-        ,Description
-        ,Note
-        ,Body
-        ,TransactionSmsCount
-    )
-    SELECT	RS.QueueID						AS QueueID
-					,RS.TransactionNumber		AS TransactionNumber
-                    ,RS.TransactionDT				AS TransactionDT
-                    ,RS.Amount							AS Amount
-                    ,RS.Description					AS Description
-                    ,RS.Note								AS Note
-                    ,RS.Body								AS Body
-					,RS.TransactionSmsCount	AS TransactionSmsCount
-	FROM		(
-						SELECT 	UUID()																																							AS QueueID
-										,tmpTransactionSmsSplit.KeyID																													AS TransactionNumber
-										,DATE_FORMAT(NOW() ,'%Y-%m-%d')																										AS TransactionDT
-										,TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(tmpTransactionSmsSplit.varSegment, ',', 2), ',', -1))	AS Amount
-										,TRIM((SUBSTRING_INDEX(tmpTransactionSmsSplit.varSegment, ',', 1)))												AS Description
-										,'CC - Split - XX Total'																																	AS Note
-										,tmpTransactionSmsSplit.varSegment																										AS Body
-										,varTransactionSmsCount																															AS TransactionSmsCount
-						FROM 	tmpTransactionSmsSplit tmpTransactionSmsSplit
-					) RS
-	WHERE 	RS.Amount REGEXP '^[0-9]'
-    ;
-    
-    
-    IF varTransactionSmsCount = 0 THEN
-		SET i = 1;
-    END IF;
-    
-END WHILE;
+SET varHasTransaction = (IFNULL((SELECT '1' FROM tmpTransactionSms WHERE IsProcessFlg = 0 LIMIT 1), 0));
 
 
-SELECT 	* 
-FROM		tmpTransactionSms
-;
+IF varHasTransaction = 1 THEN
+	WHILE i = 0 DO
+		
+		SELECT 	tmpTransactionSms.TransactionSmsID	AS varTransactionSmsID
+						,tmpTransactionSms.Body 						AS varBody
+		FROM 	tmpTransactionSms tmpTransactionSms
+		WHERE	tmpTransactionSms.IsProcessFlg = 0
+		LIMIT 		1
+		INTO		varTransactionSmsID
+						,varBody
+		;
+		
+		
+		UPDATE 	tmpTransactionSms
+		SET			tmpTransactionSms.IsProcessFlg = 1
+		WHERE 	tmpTransactionSms.TransactionSmsID = varTransactionSmsID
+		;
+		
+		
+		SELECT 	COUNT(tmpTransactionSms.KeyID) AS varTransactionSmsCount
+		FROM 	tmpTransactionSms tmpTransactionSms
+		WHERE	tmpTransactionSms.IsProcessFlg = 0
+		INTO		varTransactionSmsCount
+		;
+		
+		
+		CALL TransactionSmsSplit(varBody, CHAR(10));
+		
+		
+		INSERT INTO tmpTransactionQueue
+		(
+			QueueID
+			,TransactionNumber
+			,TransactionDT
+			,Amount
+			,Description
+			,Note
+			,Body
+			,TransactionSmsCount
+		)
+		SELECT	RS.QueueID						AS QueueID
+						,RS.TransactionNumber		AS TransactionNumber
+						,RS.TransactionDT				AS TransactionDT
+						,RS.Amount							AS Amount
+						,RS.Description					AS Description
+						,RS.Note								AS Note
+						,RS.Body								AS Body
+						,RS.TransactionSmsCount	AS TransactionSmsCount
+		FROM		(
+							SELECT 	UUID()																																							AS QueueID
+											,tmpTransactionSmsSplit.KeyID																													AS TransactionNumber
+											,DATE_FORMAT(NOW() ,'%Y-%m-%d')																										AS TransactionDT
+											,TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(tmpTransactionSmsSplit.varSegment, ',', 2), ',', -1))	AS Amount
+											,TRIM((SUBSTRING_INDEX(tmpTransactionSmsSplit.varSegment, ',', 1)))												AS Description
+											,'CC - Split - XX Total'																																	AS Note
+											,tmpTransactionSmsSplit.varSegment																										AS Body
+											,varTransactionSmsCount																															AS TransactionSmsCount
+							FROM 	tmpTransactionSmsSplit tmpTransactionSmsSplit
+						) RS
+		WHERE 	RS.Amount REGEXP '^[0-9]'
+		;
+		
+		
+		IF varTransactionSmsCount = 0 THEN
+			SET i = 1;
+		END IF;
+		
+	END WHILE;
 
 
-INSERT INTO TransactionQueue
-(
-    QueueID
-    ,TransactionTypeID
-    ,TransactionNumber			    
-    ,TransactionDT					
-    ,BudgetNumber 					
-    ,BudgetCategoryID 			    
-    ,Amount 						
-    ,Description 					
-    ,Note 							
-    ,CreateBy                       
-)
-SELECT  tmpTransactionQueue.QueueID 		                											AS QueueID
-				,tmpTransactionQueue.TransactionTypeID 	            									AS TransactionTypeID
-				,tmpTransactionQueue.TransactionNumber 	            									AS TransactionNumber			    
-				,tmpTransactionQueue.TransactionDT	 	            										AS TransactionDT					
-				,EXTRACT(YEAR_MONTH FROM tmpTransactionQueue.TransactionDT)	AS BudgetNumber 					
-				,tmpTransactionQueue.BudgetCategoryID  	            									AS BudgetCategoryID 			    
-				,tmpTransactionQueue.Amount 			            												AS Amount 						
-				,REPLACE(tmpTransactionQueue.Description, '''', '') 									AS Description 					
-				,tmpTransactionQueue.Note 			 	            												AS Note 							
-				,'Bot'           	                																					AS CreateBy 
-FROM 	tmpTransactionQueue tmpTransactionQueue
-; 
+	INSERT INTO TransactionQueue
+	(
+		QueueID
+		,TransactionTypeID
+		,TransactionNumber			    
+		,TransactionDT					
+		,BudgetNumber 					
+		,BudgetCategoryID 			    
+		,Amount 						
+		,Description 					
+		,Note 							
+		,CreateBy                       
+	)
+	SELECT  tmpTransactionQueue.QueueID 		                											AS QueueID
+					,tmpTransactionQueue.TransactionTypeID 	            									AS TransactionTypeID
+					,tmpTransactionQueue.TransactionNumber 	            									AS TransactionNumber			    
+					,tmpTransactionQueue.TransactionDT	 	            										AS TransactionDT					
+					,EXTRACT(YEAR_MONTH FROM tmpTransactionQueue.TransactionDT)	AS BudgetNumber 					
+					,tmpTransactionQueue.BudgetCategoryID  	            									AS BudgetCategoryID 			    
+					,tmpTransactionQueue.Amount 			            												AS Amount 						
+					,REPLACE(tmpTransactionQueue.Description, '''', '') 									AS Description 					
+					,tmpTransactionQueue.Note 			 	            												AS Note 							
+					,'Bot'           	                																					AS CreateBy 
+	FROM 	tmpTransactionQueue tmpTransactionQueue
+	; 
 
 
-INSERT INTO logTransactionSms
-(
-	TransactionSmsID
-	,Sender
-	,Receiver
-	,Body
-	,SmsSid
-	,SmsMessageSid
-	,SmsStatus
-	,AccountSid
-	,MessageSid
-	,FromCity
-	,FromState
-	,FromZip
-	,FromCountry
-	,ToState
-	,ToCity
-	,ToZip
-	,ToCountry
-	,NumMedia
-	,NumSegments
-	,ApiVersion
-)
-SELECT 			TransactionSms.TransactionSmsID	AS TransactionSmsID
-						,TransactionSms.Sender					AS Sender
-						,TransactionSms.Receiver					AS Receiver
-						,TransactionSms.Body						AS Body
-						,TransactionSms.SmsSid					AS SmsSid
-						,TransactionSms.SmsMessageSid		AS SmsMessageSid
-						,TransactionSms.SmsStatus				AS SmsStatus
-						,TransactionSms.AccountSid				AS AccountSid
-						,TransactionSms.MessageSid			AS MessageSid
-						,TransactionSms.FromCity					AS FromCity
-						,TransactionSms.FromState				AS FromState
-						,TransactionSms.FromZip					AS FromZip
-						,TransactionSms.FromCountry			AS FromCountry
-						,TransactionSms.ToState					AS ToState
-						,TransactionSms.ToCity						AS ToCity
-						,TransactionSms.ToZip						AS ToZip
-						,TransactionSms.ToCountry				AS ToCountry
-						,TransactionSms.NumMedia				AS NumMedia
-						,TransactionSms.NumSegments		AS NumSegments
-						,TransactionSms.ApiVersion				AS ApiVersion
-FROM				TransactionSms TransactionSms
-INNER JOIN 	tmpTransactionSms tmpTransactionSms
-ON					tmpTransactionSms.TransactionSmsID = TransactionSms.TransactionSmsID
-;
+	INSERT INTO logTransactionSms
+	(
+		TransactionSmsID
+		,Sender
+		,Receiver
+		,Body
+		,SmsSid
+		,SmsMessageSid
+		,SmsStatus
+		,AccountSid
+		,MessageSid
+		,FromCity
+		,FromState
+		,FromZip
+		,FromCountry
+		,ToState
+		,ToCity
+		,ToZip
+		,ToCountry
+		,NumMedia
+		,NumSegments
+		,ApiVersion
+	)
+	SELECT 			TransactionSms.TransactionSmsID	AS TransactionSmsID
+							,TransactionSms.Sender					AS Sender
+							,TransactionSms.Receiver					AS Receiver
+							,TransactionSms.Body						AS Body
+							,TransactionSms.SmsSid					AS SmsSid
+							,TransactionSms.SmsMessageSid		AS SmsMessageSid
+							,TransactionSms.SmsStatus				AS SmsStatus
+							,TransactionSms.AccountSid				AS AccountSid
+							,TransactionSms.MessageSid			AS MessageSid
+							,TransactionSms.FromCity					AS FromCity
+							,TransactionSms.FromState				AS FromState
+							,TransactionSms.FromZip					AS FromZip
+							,TransactionSms.FromCountry			AS FromCountry
+							,TransactionSms.ToState					AS ToState
+							,TransactionSms.ToCity						AS ToCity
+							,TransactionSms.ToZip						AS ToZip
+							,TransactionSms.ToCountry				AS ToCountry
+							,TransactionSms.NumMedia				AS NumMedia
+							,TransactionSms.NumSegments		AS NumSegments
+							,TransactionSms.ApiVersion				AS ApiVersion
+	FROM				TransactionSms TransactionSms
+	INNER JOIN 	tmpTransactionSms tmpTransactionSms
+	ON					tmpTransactionSms.TransactionSmsID = TransactionSms.TransactionSmsID
+	;
 
 
-DELETE      	TransactionSms
-FROM        		TransactionSms TransactionSms
-INNER JOIN	tmpTransactionSms tmpTransactionSms
-ON          			tmpTransactionSms.TransactionSmsID = TransactionSms.TransactionSmsID
-;
+	DELETE      	TransactionSms
+	FROM        		TransactionSms TransactionSms
+	INNER JOIN	tmpTransactionSms tmpTransactionSms
+	ON          			tmpTransactionSms.TransactionSmsID = TransactionSms.TransactionSmsID
+	;
+
+END IF;
 
     
 END;;
 DELIMITER ;
 
 
-
-
-select * from TransactionSms order by 1 desc limit 5;
-select * from logTransactionSms order by 1 desc limit 5;
-select * from TransactionQueue order by 1 desc limit 5;
-select * from logTransactionQueue order by 1 desc limit 5;
-
+/*
+select * from TransactionSms order by 1 desc limit 50;
+select * from logTransactionSms order by 1 desc limit 50;
+select * from TransactionQueue order by 1 desc limit 50;
+select * from logTransactionQueue order by 1 desc limit 50;
+*/
 
 
 
