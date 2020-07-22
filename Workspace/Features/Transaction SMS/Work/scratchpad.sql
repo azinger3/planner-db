@@ -9,72 +9,83 @@ DELIMITER ;;
 CREATE procedure `SplitString`()
 BEGIN
 	
-	DECLARE varBody VARCHAR(1000);
+	DECLARE varString VARCHAR(1000);
 	DECLARE varDelimiter VARCHAR(100);
-	DECLARE varSegmentLength VARCHAR(100);
-	DECLARE varSegmentString VARCHAR(100);
+    DECLARE varStringLength INT DEFAULT 0;
+	DECLARE varSegment VARCHAR(100);
+    DECLARE varSegmentLength INT DEFAULT 0;
 	DECLARE varStartID INT DEFAULT 1;
 	DECLARE varEndID INT DEFAULT 1;
+	DECLARE i INT DEFAULT 0;
 
-	SET varBody = '';
+
 	SET varDelimiter = CHAR(10);
-	SET varSegmentLength = 1;
-	SET varSegmentString = '';
-	-- SET varStartID = 1;
-	-- SET varEndID = 1;
 
 
 	DROP TEMPORARY TABLE IF EXISTS tmpSplit;
 
 	CREATE TEMPORARY TABLE tmpSplit
 	(
-		KeyID 					INT(10) NOT NULL AUTO_INCREMENT
-		,SegmentString	VARCHAR(100)
+		KeyID 							INT(10) NOT NULL AUTO_INCREMENT
+        ,varString						VARCHAR(100)
+        ,varStringLength			INT(10)
+		,varSegment				VARCHAR(100)
+        ,varSegmentLength		INT(10)
+        ,varStartID					INT(10)
+        ,varEndID					INT(10)
 		,PRIMARY KEY (`KeyID`)
 	); 
 
 
-	SELECT 	TransactionSms.Body AS Body
+	SELECT 	TransactionSms.Body AS varString
 	FROM 	TransactionSms TransactionSms
 	WHERE	TransactionSms.TransactionSmsID = 5
-	INTO 		varBody
+	INTO 		varString
 	;
 
 
-	SET varEndID = LENGTH(varBody);
-    
-        
-	SELECT 	varBody AS Body
-					,varSegmentLength AS SegmentLength
-					,varSegmentString AS SegmentString
-					,varStartID AS StartID
-					,varEndID AS EndID
-	;
+	SET varStringLength = LENGTH(varString);
+	
 
+	WHILE i = 0 DO
+    
+    	SET varEndID = LOCATE(varDelimiter, varString, varStartID);
+        
+        
+        IF varEndID <= 0 THEN
+			SET i = 1;
+		END IF;
+        
+        
+        IF varEndID > 0 THEN 
+			SET varSegmentLength = (varEndID - varStartID); -- Next Item
+		ELSE
+			SET varSegmentLength = (varStringLength - varStartID + 1); -- Last Item
+		END IF;
+        
+        
+        SET varSegment = SUBSTRING(varString, varStartID, varSegmentLength);
+        
 
-	WHILE varStartID < varEndID DO
-    
-    	SET varSegmentLength = LOCATE(varDelimiter, varBody, varStartID);
-		SET varSegmentString = SUBSTRING(varBody, varStartID, varSegmentLength);
-    
-    
-		SELECT 	varBody AS Body
-						,varSegmentLength AS SegmentLength
-						,varSegmentString AS SegmentString
-						,varStartID AS StartID
-						,varEndID AS EndID
-		;
-        
-        
 		INSERT INTO tmpSplit
 		(
-			SegmentString
+			varString
+            ,varStringLength
+			,varSegment
+            ,varSegmentLength
+            ,varStartID
+            ,varEndID
 		)
-		SELECT varSegmentString AS SegmentString
+		SELECT 	varString AS varString
+						,varStringLength AS varStringLength
+						,varSegment AS varSegment
+                        ,varSegmentLength AS varSegmentLength
+						,varStartID AS varStartID
+						,varEndID AS varEndID
 		;
         
         
-        SET varStartID = varStartID + varSegmentLength;
+        SET varStartID = varEndID + 1;
         
 	END WHILE;
 
@@ -87,4 +98,15 @@ DELIMITER ;
 
 
 CALL SplitString();
+
+/*
+SELECT LOCATE(CHAR(10), 'Target, 60.60
+Need, 30.30
+Shoes for vi, 20.20
+Food, 10.10', 15) AS testme1
+,SUBSTRING('Target, 60.60
+Need, 30.30
+Shoes for vi, 20.20
+Food, 10.10', 15, 11) AS testme2 
+*/
 
