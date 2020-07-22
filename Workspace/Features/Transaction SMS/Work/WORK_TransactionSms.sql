@@ -126,7 +126,18 @@ SELECT  999 AS TransactionSmsID
 -- verify
 select * from TransactionSms order by 1 desc limit 5;
 select * from logTransactionSms order by 1 desc limit 5;
+SELECT * FROM `TransactionSms` WHERE `BOdy` REGEXP "\n";
 
+select 	locate(CHAR(10), Body) AS CharIndex
+			,length(Body) AS Length
+			,SUBSTRING(Body, 1,13) AS ExtractString
+from 	TransactionSms order by 1 desc limit 5;
+
+
+select locate(CHAR(10),'Target, 60.60
+Need, 30.30
+Shoes for vi, 20.20
+Food, 10.10')
 
 
 /*
